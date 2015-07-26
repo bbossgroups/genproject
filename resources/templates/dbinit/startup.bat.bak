@@ -1,0 +1,2 @@
+cd D:\testwp\ptest\dbinit-system
+java -jar launcher.jar > startup.log

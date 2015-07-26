@@ -1,0 +1,92 @@
+<project name="Bboss Gen public development platform project" default="default" basedir=".">
+	<description>
+		Bboss Gen public development platform project
+	</description>
+	<tstamp prefix="start" />
+
+	<tstamp>
+		<format property="compile.timestamp" pattern="yyyy-MM-dd HH.mm.ss" />
+	</tstamp>
+
+
+
+	<!-- set global properties for this build -->
+	<property file="build.properties" />
+	<target name="init" description="create timestamp and directories">
+		<echo>Init...</echo>
+
+		<tstamp />
+		<delete dir="classes-genproject" />
+
+		<delete dir="distrib" />
+		<mkdir dir="classes-genproject" />
+
+		<mkdir dir="distrib" />
+		<mkdir dir="distrib/run" />
+	</target>
+	<target name="default" depends="complete" description="default = build distribution package" />
+
+	<!--
+		       ==========================
+		        Distribution jar package
+		       ==========================
+		  -->
+	<target name="distrib" depends="init,jar-genproject,run" description="copy jar file to distribution directory">
+		<echo>Construct the distribution package...</echo>
+	</target>
+
+	<target name="compile-genproject" description="compile the genproject source ">
+		<echo>compile the genproject source ...</echo>
+		<javac encoding="UTF-8" destdir="classes-genproject" target="1.5" source="1.5" deprecation="true" debug="${debug}" optimize="${optimize}" memorymaximumsize="256M" fork="true" verbose="yes">
+			<src path="src" />
+
+			<classpath id="cp-classes-genproject">
+				<fileset dir="lib/" includes="*.jar *.zip" />
+				<fileset dir="build" includes="*.jar *.zip" />
+			</classpath>
+		</javac>
+	</target>
+	<target name="jar-genproject" depends="compile-genproject" description="generate the bboss-taglib library frameworkset-util.jar">
+		<echo>Generate the genproject library frameworkset-util.jar ...</echo>
+		<jar jarfile="distrib/genproject-impl.jar" basedir="classes-genproject" includes="**/*">
+			<manifest>
+
+				<attribute name="Implementation-Version" value="${impl.version}" />
+				<attribute name="Specification-Version" value="${revision}" />
+				<attribute name="Implementation-Vendor" value="${impl.vendor}" />
+				<attribute name="Implementation-ProductID" value="${impl.productID}" />
+				<attribute name="Compile-Timestamp" value="${compile.timestamp}" />
+				<attribute name="Compile-User" value="${username}" />
+			</manifest>
+		</jar>
+	</target>
+
+
+
+	<target name="run" depends="jar-genproject" description="copy depends liberarys">
+		<echo>copy depends liberarys ...</echo>
+		<copy todir="distrib/run/lib">
+			<fileset dir="lib" includes="**/*.jar" />
+		</copy>
+		
+		<copy todir="distrib/run/lib">
+					<fileset dir="distrib" includes="genproject-impl.jar" />
+				</copy>
+		<copy todir="distrib/run/resources">
+			<fileset dir="resources" includes="**/*" />
+		</copy>
+		
+
+		<copy todir="distrib/run/">
+			<fileset dir="build" includes="config.properties *.sh *.bat,*.jar" />
+		</copy>
+		
+
+
+	</target>
+
+	<target name="complete" depends="distrib" description="copy depends liberarys">
+		<delete dir="classes-genproject" />
+
+	</target>
+</project>

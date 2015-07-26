@@ -1,0 +1,192 @@
+<project name="${project}" default="default" basedir=".">
+	<description>
+		${project} build file
+	</description>
+	<tstamp prefix="start" />
+    <typedef resource="net/sf/antcontrib/antlib.xml" classpath="ant-contrib-1.0b3.jar" />
+	<tstamp>
+		<format property="compile.timestamp" pattern="yyyy-MM-dd HH.mm.ss" />
+	</tstamp>
+
+
+
+	<!-- set global properties for this build -->
+	<property file="build.properties" />
+	<target name="init" description="create timestamp and directories">
+		<echo>Init...</echo>
+
+		<tstamp />
+		<delete dir="classes-all" />	
+		<delete dir="${distrib}" />
+		<mkdir dir="classes-all" />
+		<mkdir dir="${distrib}" />
+		
+
+	</target>
+	<target name="default" depends="complete" description="default = build distribution package" />
+
+	<!--
+		       ==========================
+		        Distribution jar package
+		       ==========================
+	-->
+	<target name="distrib" depends="init,jar-${project},copy-resource,copy-depends-liberary" description="copy jar file to distribution directory">
+		<echo>Construct the distribution package...</echo>
+		
+	</target>
+
+
+	<target name="compile-all" description="compile the compile-all source ">
+		<echo>compile the compile-all source ...</echo>
+		<delete dir="classes-all" />
+		<mkdir dir="classes-all" />
+		<javac encoding="UTF-8" destdir="classes-all" target="1.6" source="1.6" deprecation="true" debug="${debug}" optimize="${optimize}" memorymaximumsize="256M" fork="true" verbose="yes">
+			<src path="${source}/src" />
+			<classpath id="cp-fd_baseline">
+				<fileset dir="${webroot}/WEB-INF/lib" includes="**/*.jar *.zip" />
+				<fileset dir="./lib-compile" includes="**/*.jar *.zip" />
+				<fileset dir="${distrib}" includes="**/*.jar *.zip" />
+			</classpath>
+		</javac>
+		<copy todir="classes-all">
+			<fileset dir="${source}/src" includes="**/*.xml,**/*.wsdl,**/*.xls,**/*.xlsx" />
+		</copy>
+		<!--
+		<copy todir="classes-sonar">
+			<fileset dir="classes-all" includes="**/*.*"/>
+		</copy>
+		-->
+	</target>
+	
+	
+	<target name="jar-${project}" depends="compile-all" description="generate the ${project}-lib library ${project}.jar">
+			<echo>Generate the jar-${project} library ${project}.jar ...</echo>
+			<jar jarfile="${distrib}/${project}.jar" basedir="classes-all" includes="**/*">
+				<manifest>
+					<attribute name="Implementation-Version" value="${impl.version}" />
+					<attribute name="Specification-Version" value="${revision}" />
+					<attribute name="Implementation-Vendor" value="${impl.vendor}" />
+					<attribute name="Implementation-ProductID" value="${impl.productID}" />
+					<attribute name="Compile-Timestamp" value="${compile.timestamp}" />
+					<attribute name="Compile-User" value="${username}" />
+				</manifest>
+			</jar>
+	</target>
+	<target name="buildjar" depends="init,jar-${project}" description="jar-${project}">
+			<delete dir="classes-all" />
+		
+		</target>
+	<target name="copy-resource" description="copy resource files">
+		<echo>copy resource files ...</echo>
+		<copy todir="${distrib}/WebRoot/" overwrite="true">
+			<fileset dir="${webroot}/" />
+		</copy>
+		
+		<delete dir="${distrib}/WebRoot/WEB-INF/classes"/>
+		<delete dir="${distrib}/WebRoot/sitepublish"/>
+		<delete dir="${distrib}/WebRoot/cms/siteResource/BPIT"/>
+			<delete dir="${distrib}/WebRoot/cms/siteResource/MobileVote"/>
+			<delete dir="${distrib}/WebRoot/cms/siteResource/sanyIPP"/>
+		<delete dir="${distrib}/WebRoot/webqqdemo"/>
+				<delete dir="${distrib}/WebRoot/sanyems"/>
+				<delete dir="${distrib}/WebRoot/sanygsp"/>
+		<delete dir="${distrib}/WebRoot/sanyhrm"/>
+		<delete dir="${distrib}/WebRoot/sanymbp"/>
+		
+		<mkdir dir="${distrib}/WebRoot/WEB-INF/classes"/>
+		<copy todir="${distrib}/WebRoot/WEB-INF/classes">
+			<fileset dir="${source}/resources" includes="**/*" 
+				excludes="org/frameworkset/mq/mq-init.xml"/>
+		</copy>		
+	</target>	
+	<target name="copy-depends-liberary" description="copy depends liberarys">
+				<echo>copy depends liberarys ...</echo>
+				<copy todir="${distrib}/WebRoot/WEB-INF/lib" overwrite="true">
+						<fileset dir="${distrib}" includes="*.jar" />
+				</copy>
+	</target>
+	
+	<target name="war" depends="distrib" description="copy depends liberarys">
+		
+	
+	
+		<war destfile="${distrib}/${project}.war" webxml="${distrib}/WebRoot/WEB-INF/web.xml">
+		  <fileset dir="${distrib}/WebRoot/"/>	  
+		</war>
+		<delete dir="${distrib}/WebRoot"/>
+	</target>
+	
+	<target name="complete" depends="war" description="copy depends liberarys">
+		<delete dir="classes-all" />
+	
+	</target>
+	
+	<target name="startTomcat">
+		   <if>
+		   <not>
+		    <socket server="${server.ip}" port="${tomcat.port}" /><!--判断tomcat服务器的端口是否能访问，如果不能访问到，则说明未启动，就执行then中的操作-->
+		   </not>
+		   <then>
+		    <echo message="start tomcat in ${server.ip}..." />
+		    <sshexec host="${server.ip}" username="${server.username}" password="${server.password}" command="${tomcat.home}/bin/restart.sh" trust="true" /><!--通过ssh远程启动tomcat-->
+		    <waitfor maxwait="5" maxwaitunit="minute" checkevery="5" checkeveryunit="second"><!--每5秒钟检查tomcat是否启动-->
+		     <and>
+		      <socket server="${server.ip}" port="${tomcat.port}" />
+		     </and>
+		    </waitfor>
+			<sleep seconds="${sleeptime}" />
+		   </then>
+		  </if>
+		</target>
+		<target name="stopTomcat">
+		  <if>
+		   <socket server="${server.ip}" port="${tomcat.port}" /><!--检查tomcat的端口，判断tomcat是否还在运行-->
+		   <then>
+		    <echo message="stop tomcat in ${server.ip}..." />
+		    <sshexec failonerror="true" host="${server.ip}" 
+				username="${server.username}" password="${server.password}"
+				command="ps -efww|grep ${tomcat.home}/bin |grep -v grep|cut -c 9-15|xargs kill -9" trust="true" /><!--远程执行关闭tomcat-->
+		    <waitfor maxwait="5" maxwaitunit="minute" checkevery="5" checkeveryunit="second">
+		     <not>
+		      <socket server="${server.ip}" port="${tomcat.port}" />
+		     </not>
+		    </waitfor>
+		   </then>
+		  </if>
+		</target>
+		
+		<target name="deploywar" >				
+			<antcall target="stopTomcat">
+				<param name="server.ip" value="${server.ip}" />
+				<param name="tomcat.port" value="${tomcat.port}" />
+				<param name="tomcat.home" value="${tomcat.home}" />
+				<param name="server.username" value="${server.username}" />
+				<param name="server.password" value="${server.password}" />
+			</antcall>
+			<scp file="${warfile}" todir="${server.username}@${server.ip}:${tomcat.home}/webapps" trust="true" password="${server.password}" />
+			<echo>Clear old dirctory ${clearfile} ...</echo>
+			<sshexec host="${server.ip}" username="${server.username}" password="${server.password}" command="rm -Rf ${tomcat.home}/webapps/${clearfile}" trust="true" />				
+			<antcall target="startTomcat">
+				<param name="server.ip" value="${server.ip}" />
+				<param name="tomcat.port" value="${tomcat.port}" />
+				<param name="tomcat.home" value="${tomcat.home}" />
+				<param name="server.username" value="${server.username}" />
+				<param name="server.password" value="${server.password}" />
+				<param name="sleeptime" value="${sleeptime}" /> 
+			</antcall>				
+		</target>
+		<target name="uploadtoserver" depends="default">
+			<antcall target="deploywar">
+				<param name="server.ip" value="10.0.14.41" />
+				<param name="tomcat.port" value="80" />
+				<param name="tomcat.home" value="/usr/local/apache-tomcat-7.0.54" />
+				<param name="server.username" value="root" />
+				<param name="server.password" value="1234qwerASDF" />
+				<param name="clearfile" value="MSM" />
+				<param name="warfile" value="distrib/MSM.war" />
+				<param name="sleeptime" value="60" /> 
+			</antcall>
+			
+		</target>
+	
+</project>
