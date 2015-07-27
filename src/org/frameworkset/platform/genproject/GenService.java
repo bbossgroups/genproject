@@ -2,7 +2,6 @@ package org.frameworkset.platform.genproject;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -182,18 +181,22 @@ public class GenService {
 	{
 		if(war != null && war.startsWith("http://"))
 		{
+			System.out.println("download war file from "+war +" starting....");
 			UrlResource url = new UrlResource(war);
 			File tempwar = new File(projecttemppath,url.getFilename());
 			url.savetofile(tempwar);
+			System.out.println("download war file from "+war+" sucessed.");
 			war = tempwar.getCanonicalPath();
 		}
 		
 		
 		if(db_init_tool != null && db_init_tool.startsWith("http://"))
 		{
+			System.out.println("download db_init_tool file from "+db_init_tool +" starting....");
 			UrlResource url = new UrlResource(db_init_tool);
 			File tempzip = new File(projecttemppath,url.getFilename());
 			url.savetofile(tempzip);
+			System.out.println("download db_init_tool file from "+db_init_tool+" sucessed.");
 			this.db_init_tool = tempzip.getCanonicalPath(); 
 		}
 		
