@@ -176,6 +176,21 @@ public class GenService {
 				this.projectresourcepath.getAbsolutePath());
 	}
 
+	private String handleFilename(String filename)
+	{
+		if(filename == null || filename.trim().length() == 0)
+			return filename;
+		int idex = filename.indexOf("=");
+		if(idex > 0 )
+		{
+			String[] filenames = filename.split("=");
+			return filenames[1];
+		}
+		else
+		{
+			return filename;
+		}
+	}
 	private void handleArches() throws IOException
 	{
 		if(war == null || war.trim().length() == 0)
@@ -190,7 +205,7 @@ public class GenService {
 		{
 			System.out.println("download war file from "+war +" starting....");
 			UrlResource url = new UrlResource(war);
-			File tempwar = new File(projecttemppath,url.getFilename());
+			File tempwar = new File(projecttemppath,handleFilename(url.getFilename()));
 			url.savetofile(tempwar);
 			System.out.println("download war file from "+war+" sucessed.");
 			war = tempwar.getCanonicalPath();
@@ -213,7 +228,7 @@ public class GenService {
 		{
 			System.out.println("download db_init_tool file from "+db_init_tool +" starting....");
 			UrlResource url = new UrlResource(db_init_tool);
-			File tempzip = new File(projecttemppath,url.getFilename());
+			File tempzip = new File(projecttemppath,handleFilename(url.getFilename()));
 			url.savetofile(tempzip);
 			System.out.println("download db_init_tool file from "+db_init_tool+" sucessed.");
 			this.db_init_tool = tempzip.getCanonicalPath(); 
