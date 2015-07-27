@@ -194,7 +194,6 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-workflow-web.jar" sourcepath="WebRoot/WEB-INF/lib/workflow-sources.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-workflow.jar" sourcepath="WebRoot/WEB-INF/lib/workflow-sources.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-greatwall-api.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-message.jar"/>
 	<classpathentry kind="lib" path="lib-compile/javaee.jar"/>
 	<classpathentry kind="lib" path="lib-compile/junit-4.6.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
