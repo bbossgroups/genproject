@@ -78,7 +78,7 @@
 		
 
 		<copy todir="distrib/run/">
-			<fileset dir="build" includes="config.properties *.sh *.bat,*.jar" />
+			<fileset dir="build" includes="**/*" />
 		</copy>
 		
 

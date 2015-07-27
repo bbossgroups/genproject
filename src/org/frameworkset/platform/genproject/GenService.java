@@ -20,6 +20,7 @@ import com.frameworkset.util.FileUtil;
 import com.frameworkset.util.VelocityUtil;
 
 public class GenService {
+	private File approotdir;
 	private String eclipseworkspace;
 	private String projectname;
 	private boolean initdb;
@@ -31,6 +32,7 @@ public class GenService {
 	private String db_init_tool;
 	private String war;
 	private boolean inited;
+	private File projectarchpath;
 
 	private File projectpath;
 	private File projecttemppath;
@@ -64,7 +66,8 @@ public class GenService {
 		projecttemppath  = new File(projectpath, "temp");
 		projectsrcpath  = new File(projectpath, "src");
 		projectsrctestpath  = new File(projectpath, "src-test");
-		
+		if(approotdir != null)
+			this.projectarchpath = new File(this.approotdir,"arches");
 		clearproject = Boolean.parseBoolean(CommonLauncher.getProperty(
 				"clearproject", "true"));
 		if (clearproject && projectpath.exists())
@@ -89,18 +92,14 @@ public class GenService {
 		initdb = Boolean.parseBoolean(CommonLauncher.getProperty("initdb",
 				"true"));
 
-		driverClassName = CommonLauncher.getProperty("driverClassName",
-				"oracle.jdbc.driver.OracleDriver");// 要生成的工程目录
-		url = CommonLauncher.getProperty("url",
-				"jdbc:oracle:thin:@//localhost:1521/orcl");// 要生成的工程目录
-		username = CommonLauncher.getProperty("username", "BBOSSTEST");// 要生成的工程目录
-		password = CommonLauncher.getProperty("password", "BBOSSTEST");// 要生成的工程目录
+		driverClassName = CommonLauncher.getProperty("driverClassName");// 要生成的工程目录
+		url = CommonLauncher.getProperty("url");// 要生成的工程目录
+		username = CommonLauncher.getProperty("username");// 要生成的工程目录
+		password = CommonLauncher.getProperty("password");// 要生成的工程目录
 		validationQuery = CommonLauncher.getProperty("validationQuery",
-				"select 1 from dual");// 要生成的工程目录
-		db_init_tool = CommonLauncher.getProperty("db_init_tool",
-				"D:\\d\\workspace\\bboss-cms\\distrib\\dbinit-system.zip");// 要生成的工程目录
-		war = CommonLauncher.getProperty("war",
-				"D:\\d\\workspace\\bboss-cms\\distrib\\WebRoot.war");// 要生成的工程目录
+				"");// 要生成的工程目录
+		db_init_tool = CommonLauncher.getProperty("db_init_tool");// 要生成的工程目录
+		war = CommonLauncher.getProperty("war");// 要生成的工程目录
 
 	}
 	public void clean()
@@ -177,9 +176,17 @@ public class GenService {
 				this.projectresourcepath.getAbsolutePath());
 	}
 
-	private void downLastestArch() throws IOException
+	private void handleArches() throws IOException
 	{
-		if(war != null && war.startsWith("http://"))
+		if(war == null || war.trim().length() == 0)
+		{
+			if(projectarchpath != null)
+			{
+				war = new File(projectarchpath,"bboss.war").getCanonicalPath();
+				System.out.println("use war file "+war );
+			}
+		}
+		else if(war.startsWith("http://"))
 		{
 			System.out.println("download war file from "+war +" starting....");
 			UrlResource url = new UrlResource(war);
@@ -188,9 +195,21 @@ public class GenService {
 			System.out.println("download war file from "+war+" sucessed.");
 			war = tempwar.getCanonicalPath();
 		}
+		else
+		{
+			System.out.println("use war file "+war );
+		}
 		
 		
-		if(db_init_tool != null && db_init_tool.startsWith("http://"))
+		if(db_init_tool == null || db_init_tool.trim().length() == 0)
+		{
+			if(projectarchpath != null)
+			{
+				db_init_tool = new File(projectarchpath,"dbinit-system.zip").getCanonicalPath();
+				System.out.println("use db_init_tool file "+db_init_tool );
+			}
+		}
+		else if(db_init_tool.startsWith("http://"))
 		{
 			System.out.println("download db_init_tool file from "+db_init_tool +" starting....");
 			UrlResource url = new UrlResource(db_init_tool);
@@ -199,10 +218,14 @@ public class GenService {
 			System.out.println("download db_init_tool file from "+db_init_tool+" sucessed.");
 			this.db_init_tool = tempzip.getCanonicalPath(); 
 		}
+		else
+		{
+			System.out.println("use db_init_tool file "+db_init_tool );
+		}
 		
 	}
 	private void unzipArchs() throws ZipException, IOException {
-		downLastestArch();
+		handleArches();
 		FileUtil.unzip(war, projectwebrootpath.getAbsolutePath());
 		FileUtil.unzip(this.db_init_tool,
 				this.projectdbinitpath.getAbsolutePath());
@@ -461,5 +484,13 @@ public class GenService {
 		genjavaprojectfile();
 		gendbpoolfile();
 
+	}
+
+	public File getApprootdir() {
+		return approotdir;
+	}
+
+	public void setApprootdir(File approotdir) {
+		this.approotdir = approotdir;
 	}
 }

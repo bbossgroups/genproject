@@ -1,0 +1,1 @@
+if db_init_tool and war not setted in config.properties,this tool will use dbinit-system.zip and bboss.war which be putted under directory arches.
