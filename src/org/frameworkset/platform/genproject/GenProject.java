@@ -11,7 +11,7 @@ public class GenProject {
 		GenService service = new GenService();
 		service.init();
 		service.gen();
-		
+		service.clean();
 	}
 	
 

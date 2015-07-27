@@ -1,15 +1,18 @@
 package org.frameworkset.platform.genproject;
 
-import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.zip.ZipException;
 
+import org.apache.commons.io.Charsets;
 import org.frameworkset.runtime.CommonLauncher;
 import org.frameworkset.util.io.ClassPathResource;
+import org.frameworkset.util.io.UrlResource;
 
 import bboss.org.apache.velocity.Template;
 import bboss.org.apache.velocity.VelocityContext;
@@ -31,8 +34,13 @@ public class GenService {
 	private boolean inited;
 
 	private File projectpath;
+	private File projecttemppath;
+	
+	private File projectlibcompilepath;
 
 	private File projectwebrootpath;
+	private File projectsrcpath;
+	private File projectsrctestpath;
 	private File projectdbinitpath;
 	private File projectresourcepath;
 	private String validationQuery;
@@ -53,6 +61,11 @@ public class GenService {
 		projectdbinitpath = new File(projectpath, "dbinit-system");
 		projectwebrootpath = new File(projectpath, "WebRoot");
 		projectresourcepath = new File(projectpath, "resources");
+		projectlibcompilepath = new File(projectpath, "lib-compile");
+		projecttemppath  = new File(projectpath, "temp");
+		projectsrcpath  = new File(projectpath, "src");
+		projectsrctestpath  = new File(projectpath, "src-test");
+		
 		clearproject = Boolean.parseBoolean(CommonLauncher.getProperty(
 				"clearproject", "true"));
 		if (clearproject && projectpath.exists())
@@ -65,6 +78,15 @@ public class GenService {
 			projectwebrootpath.mkdirs();
 		if (!projectresourcepath.exists())
 			projectresourcepath.mkdirs();
+		if (!projectlibcompilepath.exists())
+			projectlibcompilepath.mkdirs();
+		if (!projecttemppath.exists())
+			projecttemppath.mkdirs();
+		if (!projectsrcpath.exists())
+			projectsrcpath.mkdirs();
+		if (!projectsrctestpath.exists())
+			projectsrctestpath.mkdirs();
+		
 		initdb = Boolean.parseBoolean(CommonLauncher.getProperty("initdb",
 				"true"));
 
@@ -82,13 +104,19 @@ public class GenService {
 				"D:\\d\\workspace\\bboss-cms\\distrib\\WebRoot.war");// 要生成的工程目录
 
 	}
-
+	public void clean()
+	{
+		if (!projecttemppath.exists())
+			projecttemppath.delete();
+	}
 	public void gen() {
 		init();
 		try {
 			unzipArchs();
 			copyresources();
 			genProject();
+			gentomcatdeploy();
+			copydepenglibs();
 			initDB();
 		} catch (ZipException e) {
 			// TODO Auto-generated catch block
@@ -98,32 +126,109 @@ public class GenService {
 			e.printStackTrace();
 		}
 	}
-
-	private void copyresources() throws IOException {
-		FileUtil.copy(new File(projectwebrootpath, "WEB-INF/classes"),
-				this.projectresourcepath.getAbsolutePath());
-	}
-
-	private void unzipArchs() throws ZipException, IOException {
-		FileUtil.unzip(war, projectwebrootpath.getAbsolutePath());
-		FileUtil.unzip(this.db_init_tool,
-				this.projectdbinitpath.getAbsolutePath());
-	}
-	private void setupdbinitpath(String startuppath,String startupfilename)
+	private void gentomcatdeploy()
 	{
-		FileWriter writer = null;
+		Writer writer = null;
+		OutputStream out = null;
 		try {
 			// 生成ant构建属性文件
-			Template antbuild = VelocityUtil.getTemplate(startuppath);
+			Template antbuild = VelocityUtil.getTemplate("ant/tomcat-deploy.xml");
 			VelocityContext context = new VelocityContext();// VelocityUtil.buildVelocityContext(context)
-			context.put("dbinitpath", "cd "+this.projectdbinitpath.getCanonicalFile());
-			writer = new FileWriter(new File(projectdbinitpath, startupfilename));
+			context.put("projectname", this.projectname);
+			context.put("projectwebrootpath", this.projectwebrootpath);
+			out = new FileOutputStream(new File(this.projectpath, this.projectname+".xml"));
+			writer = new OutputStreamWriter(out,Charsets.UTF_8);	
+//			writer = new FileWriter(new File(this.projectpath, this.projectname+".xml"));
 			antbuild.merge(context, writer);
 			writer.flush();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+			if (out != null)
+				try {
+					out.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			if (writer != null)
+				try {
+					writer.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+	}
+	
+	private void copydepenglibs() throws IOException
+	{
+		ClassPathResource resource = new ClassPathResource(
+				"templates/lib-compile/javaee.jar");
+		resource.savetofile(new File(this.projectlibcompilepath, "javaee.jar"));
+		resource = new ClassPathResource(
+				"templates/lib-compile/junit-4.6.jar");
+		resource.savetofile(new File(this.projectlibcompilepath, "junit-4.6.jar"));
+	}
+	
+
+	private void copyresources() throws IOException {
+		FileUtil.copy(new File(projectwebrootpath, "WEB-INF/classes"),
+				this.projectresourcepath.getAbsolutePath());
+	}
+
+	private void downLastestArch() throws IOException
+	{
+		if(war != null && war.startsWith("http://"))
+		{
+			UrlResource url = new UrlResource(war);
+			File tempwar = new File(projecttemppath,url.getFilename());
+			url.savetofile(tempwar);
+			war = tempwar.getCanonicalPath();
+		}
+		
+		
+		if(db_init_tool != null && db_init_tool.startsWith("http://"))
+		{
+			UrlResource url = new UrlResource(db_init_tool);
+			File tempzip = new File(projecttemppath,url.getFilename());
+			url.savetofile(tempzip);
+			this.db_init_tool = tempzip.getCanonicalPath(); 
+		}
+		
+	}
+	private void unzipArchs() throws ZipException, IOException {
+		downLastestArch();
+		FileUtil.unzip(war, projectwebrootpath.getAbsolutePath());
+		FileUtil.unzip(this.db_init_tool,
+				this.projectdbinitpath.getAbsolutePath());
+	}
+	private void setupdbinitpath(String startuppath,String startupfilename)
+	{
+		Writer writer = null;
+		OutputStream out = null;
+		try {
+			// 生成ant构建属性文件
+			Template antbuild = VelocityUtil.getTemplate(startuppath);
+			VelocityContext context = new VelocityContext();// VelocityUtil.buildVelocityContext(context)
+			context.put("dbinitpath", "cd "+this.projectdbinitpath.getCanonicalFile());
+			out = new FileOutputStream(new File(projectdbinitpath, startupfilename));
+			writer = new OutputStreamWriter(out,Charsets.UTF_8);	
+//			writer = new FileWriter(new File(projectdbinitpath, startupfilename));
+			antbuild.merge(context, writer);
+			writer.flush();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (out != null)
+				try {
+					out.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			if (writer != null)
 				try {
 					writer.close();
@@ -136,19 +241,29 @@ public class GenService {
 	
 	private void recoverdbinitpath(String startuppath,String startupfilename)
 	{
-		FileWriter writer = null;
+		Writer writer = null;
+		OutputStream out = null;
 		try {
 			// 生成ant构建属性文件
 			Template antbuild = VelocityUtil.getTemplate(startuppath);
 			VelocityContext context = new VelocityContext();// VelocityUtil.buildVelocityContext(context)
 			context.put("dbinitpath", "");
-			writer = new FileWriter(new File(projectdbinitpath, startupfilename));
+			out = new FileOutputStream(new File(projectdbinitpath, startupfilename));
+			writer = new OutputStreamWriter(out,Charsets.UTF_8);		
+//			writer = new FileWriter(new File(projectdbinitpath, startupfilename));
 			antbuild.merge(context, writer);
 			writer.flush();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+			if (out != null)
+				try {
+					out.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			if (writer != null)
 				try {
 					writer.close();
@@ -212,13 +327,15 @@ public class GenService {
 
 	private void genjavaprojectfile() {
 
-		FileWriter writer = null;
+		Writer writer = null;
+		OutputStream out = null;
 		try {
 			// 生成ant构建属性文件
 			Template antbuild = VelocityUtil.getTemplate("project/.project");
 			VelocityContext context = new VelocityContext();// VelocityUtil.buildVelocityContext(context)
 			context.put("project", this.projectname);
-			writer = new FileWriter(new File(this.projectpath, ".project"));
+			out = new FileOutputStream(new File(this.projectpath, ".project"));
+			writer = new OutputStreamWriter(out,Charsets.UTF_8);			 
 			antbuild.merge(context, writer);
 			writer.flush();
 			ClassPathResource resource = new ClassPathResource(
@@ -227,6 +344,13 @@ public class GenService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+			if (out != null)
+				try {
+					out.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			if (writer != null)
 				try {
 					writer.close();
@@ -239,7 +363,8 @@ public class GenService {
 
 	private void gendbpoolfile() {
 
-		FileWriter writer = null;
+		Writer writer = null;
+		OutputStream out = null;
 		try {
 			// 生成ant构建属性文件
 			Template antbuild = VelocityUtil.getTemplate("resources/dbcp.xml");
@@ -250,8 +375,9 @@ public class GenService {
 			context.put("username", this.username);
 			context.put("password", this.password);
 			context.put("validationQuery", this.validationQuery);
-			writer = new FileWriter(new File(this.projectresourcepath,
+			out = new FileOutputStream(new File(this.projectresourcepath,
 					"dbcp.xml"));
+			writer = new OutputStreamWriter(out,Charsets.UTF_8);
 			antbuild.merge(context, writer);
 			writer.flush();
 			ClassPathResource resource = new ClassPathResource(
@@ -267,6 +393,13 @@ public class GenService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+			if (out != null)
+				try {
+					out.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			if (writer != null)
 				try {
 					writer.close();
@@ -278,15 +411,19 @@ public class GenService {
 	}
 
 	private void genantbuildfile() {
-		FileWriter writer = null;
+		Writer writer = null;
+		OutputStream out = null;
 		try {
 			// 生成ant构建属性文件
 			Template antbuild = VelocityUtil
 					.getTemplate("ant/build.properties");
 			VelocityContext context = new VelocityContext();// VelocityUtil.buildVelocityContext(context)
 			context.put("projectname", this.projectname);
-			writer = new FileWriter(new File(this.projectpath,
+			out = new FileOutputStream(new File(this.projectpath,
 					"build.properties"));
+			writer = new OutputStreamWriter(out,Charsets.UTF_8);
+//			writer = new FileWriter(new File(this.projectpath,
+//					"build.properties"));
 			antbuild.merge(context, writer);
 			writer.flush();
 			ClassPathResource resource = new ClassPathResource(
@@ -299,6 +436,13 @@ public class GenService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+			if (out != null)
+				try {
+					out.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			if (writer != null)
 				try {
 					writer.close();

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="src-test"/>
+	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/activation-1.1.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/axis.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/backport-util-concurrent.jar"/>
@@ -38,7 +40,7 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/ewebedit.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/EXML.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/FontBox-0.1.0-dev.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/frameworkset-pool.jar" />
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/frameworkset-pool.jar"  sourcepath="WebRoot/WEB-INF/lib/frameworkset-pool-sources.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/frameworkset-util.jar" />
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/geronimo-activation_1.1_spec-1.0.2.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/geronimo-annotation_1.0_spec-1.1.1.jar"/>
@@ -112,13 +114,11 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/log4j-1.2.17.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/slf4j-api-1.7.2.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/slf4j-log4j12-1.7.2.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-greatwall-api.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jtds-1.2.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/activiti-bpmn-converter-5.12.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/activiti-bpmn-layout-5.12.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/activiti-bpmn-model-5.12.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/activiti-engine-5.12-sources.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/activiti-engine-5.12.jar" />
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/activiti-engine-5.12.jar"  sourcepath="WebRoot/WEB-INF/lib/activiti-engine-5.12-sources.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/geronimo-jaxws_2.2_spec-1.1.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/javax.ws.rs-api-2.0-m10.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/mysql-connector-java-5.1.25-bin.jar"/>
@@ -133,8 +133,7 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jasperreports-javaflow-5.5.1.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jcommon-1.0.15.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jfreechart-1.0.12.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/iText-2.1.7.js2.jar"/>
-	<classpathentry kind="lib" path="lib-compile/javaee.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/iText-2.1.7.js2.jar"/>	
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-analyzers-common-4.7.0.jar" />
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-core-4.7.0.jar" />
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-demo-4.7.0.jar"/>
@@ -149,16 +148,14 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/poi-ooxml-schemas-3.10-FINAL-20140208.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/poi-scratchpad-3.10-FINAL-20140208.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/bboss-security.jar" />
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-message.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-net-3.3-sources.jar"/>
+	
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-net-3.3.jar" sourcepath="WebRoot/WEB-INF/lib/commons-net-3.3-sources.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/bboss-security-web.jar" sourcepath="WebRoot/WEB-INF/lib/bboss-security-web-sources.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/bboss-security-web-inf.jar" sourcepath="WebRoot/WEB-INF/lib/bboss-security-web-sources.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/bboss-core.jar" />
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/bboss-rpc.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jgroups-3.6.1.Final.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/hessian-4.0.37-src.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/hessian-4.0.37.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/hessian-4.0.37.jar" sourcepath="WebRoot/WEB-INF/lib/hessian-4.0.37-src.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/xmlschema-core-2.2.1.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/asm-5.0.3.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/cglib-nodep-3.1.jar"/>
@@ -176,5 +173,29 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/neethi-3.0.3.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-lang-2.6.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-httpclient-3.1.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/system.jar"  sourcepath="WebRoot/WEB-INF/lib/system-sources.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/cms-vote.jar" sourcepath="WebRoot/WEB-INF/lib/system-sources.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/cms.jar" sourcepath="WebRoot/WEB-INF/lib/system-sources.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-appbom.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-application.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-demo.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-desktop.jar"  sourcepath="WebRoot/WEB-INF/lib/system-sources.jar"/>
+	 
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-ldap.jar"  sourcepath="WebRoot/WEB-INF/lib/system-sources.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-log.jar"  sourcepath="WebRoot/WEB-INF/lib/system-sources.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-mail.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-masterdata.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-mbp.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-message.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-sap.jar"  sourcepath="WebRoot/WEB-INF/lib/system-sources.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-sms.jar"  sourcepath="WebRoot/WEB-INF/lib/sany-sms-source.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-workflow-bussiness.jar" sourcepath="WebRoot/WEB-INF/lib/workflow-sources.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-workflow-demo.jar" sourcepath="WebRoot/WEB-INF/lib/workflow-sources.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-workflow-web.jar" sourcepath="WebRoot/WEB-INF/lib/workflow-sources.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-workflow.jar" sourcepath="WebRoot/WEB-INF/lib/workflow-sources.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-greatwall-api.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sany-message.jar"/>
+	<classpathentry kind="lib" path="lib-compile/javaee.jar"/>
+	<classpathentry kind="lib" path="lib-compile/junit-4.6.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>
