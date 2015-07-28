@@ -104,7 +104,7 @@ public class GenService {
 	}
 	public void clean()
 	{
-		if (!projecttemppath.exists())
+		if (projecttemppath.exists())
 			projecttemppath.delete();
 	}
 	public void gen() {
