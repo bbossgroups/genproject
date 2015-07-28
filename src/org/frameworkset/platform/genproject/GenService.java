@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.MalformedURLException;
 import java.util.zip.ZipException;
 
 import org.apache.commons.io.Charsets;
@@ -119,7 +120,7 @@ public class GenService {
 		} catch (ZipException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -191,8 +192,15 @@ public class GenService {
 			return filename;
 		}
 	}
-	private void handleArches() throws IOException
+	static class ExceptionContainer{
+		Exception war;
+		Exception db;
+	}
+	private void handleArches() throws Exception
 	{
+		Thread warthread = null;
+		Thread dbthread = null;
+		final ExceptionContainer container = new ExceptionContainer();
 		if(war == null || war.trim().length() == 0)
 		{
 			if(projectarchpath != null)
@@ -203,12 +211,26 @@ public class GenService {
 		}
 		else if(war.startsWith("http://"))
 		{
-			System.out.println("download war file from "+war +" starting....");
-			UrlResource url = new UrlResource(war);
-			File tempwar = new File(projecttemppath,handleFilename(url.getFilename()));
-			url.savetofile(tempwar);
-			System.out.println("download war file from "+war+" sucessed.");
-			war = tempwar.getCanonicalPath();
+			warthread = new Thread(new Runnable(){
+
+				public void run() {
+					try {
+						System.out.println("download war file from "+war +" starting....");
+						UrlResource url = new UrlResource(war);
+						File tempwar = new File(projecttemppath,handleFilename(url.getFilename()));
+						url.savetofile(tempwar);
+						System.out.println("download war file from "+war+" sucessed.");
+						war = tempwar.getCanonicalPath();
+					} catch (Exception e) {
+						
+						container.war = e;
+					}
+					
+				}
+				
+			});
+			warthread.start();
+			
 		}
 		else
 		{
@@ -226,20 +248,57 @@ public class GenService {
 		}
 		else if(db_init_tool.startsWith("http://"))
 		{
-			System.out.println("download db_init_tool file from "+db_init_tool +" starting....");
-			UrlResource url = new UrlResource(db_init_tool);
-			File tempzip = new File(projecttemppath,handleFilename(url.getFilename()));
-			url.savetofile(tempzip);
-			System.out.println("download db_init_tool file from "+db_init_tool+" sucessed.");
-			this.db_init_tool = tempzip.getCanonicalPath(); 
+			
+			dbthread = new Thread(new Runnable(){
+				public void run() {
+					try {
+						System.out.println("download db_init_tool file from "+db_init_tool +" starting....");
+						UrlResource url = new UrlResource(db_init_tool);
+						File tempzip = new File(projecttemppath,handleFilename(url.getFilename()));
+						url.savetofile(tempzip);
+						System.out.println("download db_init_tool file from "+db_init_tool+" sucessed.");
+						db_init_tool = tempzip.getCanonicalPath(); 
+					} catch (Exception e) {
+						
+						container.db = e;
+					}
+					
+				}
+				
+			});
+			dbthread.start();
+			
 		}
 		else
 		{
 			System.out.println("use db_init_tool file "+db_init_tool );
 		}
-		
+		if(warthread != null)
+		{
+			try {
+				warthread.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if(dbthread != null)
+			try {
+				dbthread.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		if(container.db != null)
+		{
+			if(container.war != null)
+				container.war.printStackTrace();
+			throw container.db;
+		}
+		if(container.war != null)
+			throw container.war;
 	}
-	private void unzipArchs() throws ZipException, IOException {
+	private void unzipArchs() throws  Exception {
 		handleArches();
 		FileUtil.unzip(war, projectwebrootpath.getAbsolutePath());
 		FileUtil.unzip(this.db_init_tool,
