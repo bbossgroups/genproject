@@ -12,7 +12,6 @@ public class GenProject {
 	public static void main(String[] args) {
 		GenService service = new GenService();
 		service.setApprootdir(appdir);
-		service.init();
 		service.gen();
 		service.clean();
 		

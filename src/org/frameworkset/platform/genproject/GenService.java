@@ -51,7 +51,7 @@ public class GenService {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void init() {
+	public void init() throws Exception {
 		if (inited)
 			return;
 		inited = true;
@@ -72,7 +72,10 @@ public class GenService {
 		clearproject = Boolean.parseBoolean(CommonLauncher.getProperty(
 				"clearproject", "true"));
 		if (clearproject && projectpath.exists())
+		{
+			System.out.println("clean old project:"+ projectpath.getCanonicalPath());
 			projectpath.delete();
+		}
 		if (!projectpath.exists())
 			projectpath.mkdirs();
 		if (!projectdbinitpath.exists())
@@ -109,8 +112,9 @@ public class GenService {
 			projecttemppath.delete();
 	}
 	public void gen() {
-		init();
+		
 		try {
+			init();
 			unzipArchs();
 			copyresources();
 			genProject();
@@ -312,7 +316,13 @@ public class GenService {
 			// 生成ant构建属性文件
 			Template antbuild = VelocityUtil.getTemplate(startuppath);
 			VelocityContext context = new VelocityContext();// VelocityUtil.buildVelocityContext(context)
-			context.put("dbinitpath", "cd "+this.projectdbinitpath.getCanonicalFile());
+			String dir = projectdbinitpath.getCanonicalPath();
+			if (CommonLauncher.isWindows())
+			{
+//				${dbinitdisk}
+				context.put("dbinitdisk",dir.substring(0,dir.indexOf(':')+1));
+			}
+			context.put("dbinitpath", "cd "+dir);
 			out = new FileOutputStream(new File(projectdbinitpath, startupfilename));
 			writer = new OutputStreamWriter(out,Charsets.UTF_8);	
 //			writer = new FileWriter(new File(projectdbinitpath, startupfilename));
@@ -347,6 +357,11 @@ public class GenService {
 			// 生成ant构建属性文件
 			Template antbuild = VelocityUtil.getTemplate(startuppath);
 			VelocityContext context = new VelocityContext();// VelocityUtil.buildVelocityContext(context)
+			if (CommonLauncher.isWindows())
+			{
+//				${dbinitdisk}
+				context.put("dbinitdisk","");
+			}
 			context.put("dbinitpath", "");
 			out = new FileOutputStream(new File(projectdbinitpath, startupfilename));
 			writer = new OutputStreamWriter(out,Charsets.UTF_8);		
@@ -566,5 +581,10 @@ public class GenService {
 
 	public void setApprootdir(File approotdir) {
 		this.approotdir = approotdir;
+	}
+	public static void main(String[] args)
+	{
+		String dir ="d:/aaa";
+		System.out.println(dir.substring(0,dir.indexOf(':')+1));
 	}
 }
