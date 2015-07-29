@@ -74,7 +74,7 @@ public class GenService {
 		if (clearproject && projectpath.exists())
 		{
 			System.out.println("clean old project:"+ projectpath.getCanonicalPath());
-			projectpath.delete();
+			FileUtil.removeFileOrDirectory(projectpath.getCanonicalPath());
 		}
 		if (!projectpath.exists())
 			projectpath.mkdirs();
@@ -109,7 +109,16 @@ public class GenService {
 	public void clean()
 	{
 		if (projecttemppath.exists())
-			projecttemppath.delete();
+		{
+			try {
+				System.out.println("remove temp files:"+projecttemppath.getCanonicalPath());
+				FileUtil.removeFileOrDirectory(projecttemppath.getCanonicalPath());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 	}
 	public void gen() {
 		
