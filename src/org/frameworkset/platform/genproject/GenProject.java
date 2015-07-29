@@ -19,7 +19,7 @@ public class GenProject {
 	}
 	
 	public static void setAppdir(File appdir) {
-		
+		GenProject.appdir = appdir;
 	}
 	
 
