@@ -1,2 +1,3 @@
+#!/bin/sh
 ${dbinitpath}
-java -jar launcher.jar > startup.log
+java -jar launcher.jar > startup.log;

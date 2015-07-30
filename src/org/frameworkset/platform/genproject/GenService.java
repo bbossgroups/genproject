@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.net.MalformedURLException;
 import java.util.zip.ZipException;
 
 import org.apache.commons.io.Charsets;
@@ -330,8 +329,15 @@ public class GenService {
 			{
 //				${dbinitdisk}
 				context.put("dbinitdisk",dir.substring(0,dir.indexOf(':')+1));
+				System.out.println("cd "+dir);
+				context.put("dbinitpath", "cd "+dir);
 			}
-			context.put("dbinitpath", "cd "+dir);
+			else
+			{
+				System.out.println("cd "+dir);
+				context.put("dbinitpath", "cd "+dir + ";");
+			}
+			
 			out = new FileOutputStream(new File(projectdbinitpath, startupfilename));
 			writer = new OutputStreamWriter(out,Charsets.UTF_8);	
 //			writer = new FileWriter(new File(projectdbinitpath, startupfilename));
@@ -371,6 +377,7 @@ public class GenService {
 //				${dbinitdisk}
 				context.put("dbinitdisk","");
 			}
+			 
 			context.put("dbinitpath", "");
 			out = new FileOutputStream(new File(projectdbinitpath, startupfilename));
 			writer = new OutputStreamWriter(out,Charsets.UTF_8);		
@@ -397,6 +404,24 @@ public class GenService {
 				}
 		}
 	}
+	private void chmodx() throws IOException
+	{
+		Process proc = Runtime.getRuntime().exec("chmod +x -R "+
+				this.projectdbinitpath
+						.getCanonicalPath());
+		StreamGobbler error = new StreamGobbler( proc.getErrorStream(),"ERROR");
+		
+		StreamGobbler normal = new StreamGobbler( proc.getInputStream(),"NORMAL");
+		error.start();
+		normal.start();
+
+		try {
+			int exitVal = proc.waitFor();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	private void initDB() throws IOException {
 		if (this.initdb)// 如果需要用执行数据库初始化，则执行以下数据库初始化功能
 		{
@@ -413,8 +438,9 @@ public class GenService {
 				} 
 				else
 				{
+					chmodx();
 					setupdbinitpath("dbinit/startup.sh","startup.sh");
-					proc = Runtime.getRuntime().exec(
+					proc = Runtime.getRuntime().exec("sh "+
 							new File(this.projectdbinitpath, "/startup.sh")
 									.getCanonicalPath());
 				}
