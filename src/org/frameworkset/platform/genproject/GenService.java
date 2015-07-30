@@ -582,6 +582,9 @@ public class GenService {
 			ClassPathResource resource = new ClassPathResource(
 					"templates/ant/build.bat");
 			resource.savetofile(new File(this.projectpath, "build.bat"));
+			resource = new ClassPathResource(
+					"templates/ant/build.sh");
+			resource.savetofile(new File(this.projectpath, "build.sh"));
 			resource = new ClassPathResource("templates/ant/build.xml");
 			resource.savetofile(new File(this.projectpath, "build.xml"));
 			resource = new ClassPathResource("templates/ant/buildjar.bat");
