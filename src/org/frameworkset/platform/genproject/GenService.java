@@ -403,17 +403,19 @@ public class GenService {
 
 			try {
 				Process proc = null;
-				if (CommonLauncher.isLinux()) {
-//					${dbinitpath}
-					setupdbinitpath("dbinit/startup.sh","startup.sh");
-					proc = Runtime.getRuntime().exec(
-							new File(this.projectdbinitpath, "/startup.sh")
-									.getCanonicalPath());
-				} else
-				{
+				if (CommonLauncher.isWindows()) {
 					setupdbinitpath("dbinit/startup.bat","startup.bat");
 					proc = Runtime.getRuntime().exec(
 							new File(this.projectdbinitpath, "/startup.bat")
+									.getCanonicalPath());
+//					${dbinitpath}
+					
+				} 
+				else
+				{
+					setupdbinitpath("dbinit/startup.sh","startup.sh");
+					proc = Runtime.getRuntime().exec(
+							new File(this.projectdbinitpath, "/startup.sh")
 									.getCanonicalPath());
 				}
 				StreamGobbler error = new StreamGobbler( proc.getErrorStream(),"ERROR");
@@ -436,13 +438,14 @@ public class GenService {
 			}
 			finally
 			{
-				if (CommonLauncher.isLinux()) {
+				if (CommonLauncher.isWindows()) {
 //					${dbinitpath}
-					recoverdbinitpath("dbinit/startup.sh","startup.sh");
+					recoverdbinitpath("dbinit/startup.bat","startup.bat");
+					
 				
 				} else
 				{
-					recoverdbinitpath("dbinit/startup.bat","startup.bat");
+					recoverdbinitpath("dbinit/startup.sh","startup.sh");
 					
 				}
 			}
