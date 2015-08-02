@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.MalformedURLException;
 import java.util.zip.ZipException;
 
 import org.apache.commons.io.Charsets;
@@ -623,9 +624,11 @@ public class GenService {
 	public void setApprootdir(File approotdir) {
 		this.approotdir = approotdir;
 	}
-	public static void main(String[] args)
+	public static void main(String[] args) throws Exception
 	{
-		String dir ="d:/aaa";
-		System.out.println(dir.substring(0,dir.indexOf(':')+1));
+//		String dir ="d:/aaa";
+//		System.out.println(dir.substring(0,dir.indexOf(':')+1));
+		UrlResource url = new UrlResource("http://nj02.poms.baidupcs.com/file/79aeb2e91792629ca55304fe7356c143?bkt=p2-nj-384&fid=4245631570-250528-570552330597386&time=1438527441&sign=FDTAXGERLBH-DCb740ccc5511e5e8fedcff06b081203-zby2yWBB84wb%2B%2FgHnvKrJJHxWwM%3D&to=n2b&fm=Nan,B,G,nc&sta_dx=10&sta_cs=0&sta_ft=zip&sta_ct=0&fm2=Nanjing02,B,G,nc&newver=1&newfm=1&secfm=1&flow_ver=3&pkey=0000c56d3a217528d115fadefe3cded71ec5&sl=82903119&expires=8h&rt=pr&r=636645352&mlogid=796086098&vuk=4245631570&vbdid=1671589608&fin=dbinit-system.zip&fn=dbinit-system.zip&slt=pm&uta=0&rtype=1&iv=0&isw=0");
+		url.savetofile(new File("d:/test.zip"));
 	}
 }
