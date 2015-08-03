@@ -11,6 +11,7 @@ import java.util.zip.ZipException;
 import org.apache.commons.io.Charsets;
 import org.apache.log4j.Logger;
 import org.frameworkset.runtime.CommonLauncher;
+import org.frameworkset.util.io.AbstractResource;
 import org.frameworkset.util.io.ClassPathResource;
 import org.frameworkset.util.io.ResourceHandleListener;
 import org.frameworkset.util.io.UrlResource;
@@ -252,23 +253,23 @@ public class GenService {
 							final TraceStatus traceStatus = new TraceStatus(url,tempwar);
 						 
 							 
-							url.savetofile(tempwar,new ResourceHandleListener<UrlResource>() {
+							url.savetofile(tempwar,new ResourceHandleListener<AbstractResource>() {
 								
 								@Override
-								public void startEvent(UrlResource resource,File dest) {
+								public void startEvent(AbstractResource resource,File dest) {
 									
 									traceStatus.start(); 
 									
 								}
 								
 								@Override
-								public void handleDataEvent(UrlResource resource,File dest) {
+								public void handleDataEvent(AbstractResource resource,File dest) {
 									
 									traceStatus.refreshprocess();
 								}
 								
 								@Override
-								public void endEvent(UrlResource resource,File dest) {
+								public void endEvent(AbstractResource resource,File dest) {
 									traceStatus.end();
 									
 								}
@@ -333,23 +334,23 @@ public class GenService {
 						final TraceStatus traceStatus = new TraceStatus(url,tempzip);
 					 
 						 
-						url.savetofile(tempzip,new ResourceHandleListener<UrlResource>() {
+						url.savetofile(tempzip,new ResourceHandleListener<AbstractResource>() {
 							
 							@Override
-							public void startEvent(UrlResource resource,File dest) {
+							public void startEvent(AbstractResource resource,File dest) {
 								
 								traceStatus.start(); 
 								
 							}
 							
 							@Override
-							public void handleDataEvent(UrlResource resource,File dest) {
+							public void handleDataEvent(AbstractResource resource,File dest) {
 								
 								traceStatus.refreshprocess();
 							}
 							
 							@Override
-							public void endEvent(UrlResource resource,File dest) {
+							public void endEvent(AbstractResource resource,File dest) {
 								traceStatus.end();
 								
 							}

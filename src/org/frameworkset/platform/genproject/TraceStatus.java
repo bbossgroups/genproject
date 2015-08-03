@@ -12,6 +12,7 @@ public class TraceStatus extends Thread{
 	private static Logger log = Logger.getLogger(TraceStatus.class);
 	boolean first = true;
 	UrlResource url;
+	boolean ended = false;
 	File dest; 
 	long oldsavesize;
 	String oldput ;
@@ -33,9 +34,9 @@ public class TraceStatus extends Thread{
 				{
 					float rate = (float) (newsize*1.0 / url.getTotalsize());
 					StringBuilder builder = new StringBuilder();
-					builder.append(newsize).append("/").append(url.getTotalsize()).append(",").append(formater.format(rate));
+					builder.append(newsize).append("/").append(url.getTotalsize()).append(",Percent:").append(formater.format(rate));
 					oldput = builder.toString();
-					System.out.print("download file "+this.dest.getCanonicalPath()+" from "+url.getURL() + ",process status:"+oldput);
+					System.out.print("download file "+this.dest.getCanonicalPath()+" from "+url.getURL() + ",Download Size(Bytes):"+oldput);
 					
 					 
 					first = false;
@@ -48,21 +49,27 @@ public class TraceStatus extends Thread{
 					{
 						oldsavesize  = newsize;			 
 						StringBuilder builder = new StringBuilder();
-						for(int i = 0 ; oldput != null && i < oldput.length(); i ++)
+						int oldlen = oldput.length();
+						for(int i = 0 ; i < oldlen; i ++)
 							System.out.print("\b");
 						float rate = (float) (newsize*1.0 / url.getTotalsize());
 						
-						builder.append(newsize).append("/").append(url.getTotalsize()).append(",").append(formater.format(rate)).append("   ");
+						builder.append(newsize).append("/").append(url.getTotalsize()).append(",Percent:").append(formater.format(rate));
+						int div = oldlen - builder.length();
+						if(div >  0)
+						{
+							for(int i = 0; i < div; i ++)
+								builder.append(" ");
+						}
 						oldput = builder.toString();
-						System.out.print(oldput);
-						
+						System.out.print(oldput);		
 						
 					 
 						
 					}
 				}
 				
-				if(complete )
+				if(complete || ended)
 				{
 					System.out.println();
 					break;
@@ -92,7 +99,7 @@ public class TraceStatus extends Thread{
 	public void end()
 	{
 		
-		
+		ended = true;
 		synchronized(this)
 		{
 			this.notifyAll();
