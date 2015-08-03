@@ -6,12 +6,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.net.MalformedURLException;
 import java.util.zip.ZipException;
 
 import org.apache.commons.io.Charsets;
+import org.apache.log4j.Logger;
 import org.frameworkset.runtime.CommonLauncher;
 import org.frameworkset.util.io.ClassPathResource;
+import org.frameworkset.util.io.ResourceHandleListener;
 import org.frameworkset.util.io.UrlResource;
 
 import bboss.org.apache.velocity.Template;
@@ -21,6 +22,7 @@ import com.frameworkset.util.FileUtil;
 import com.frameworkset.util.VelocityUtil;
 
 public class GenService {
+	private static Logger log = Logger.getLogger(GenService.class);
 	private File approotdir;
 	private String eclipseworkspace;
 	private String projectname;
@@ -73,7 +75,7 @@ public class GenService {
 				"clearproject", "true"));
 		if (clearproject && projectpath.exists())
 		{
-			System.out.println("clean old project:"+ projectpath.getCanonicalPath());
+			log.info("clean old project:"+ projectpath.getCanonicalPath());
 			FileUtil.removeFileOrDirectory(projectpath.getCanonicalPath());
 		}
 		if (!projectpath.exists())
@@ -111,7 +113,7 @@ public class GenService {
 		if (projecttemppath.exists())
 		{
 			try {
-				System.out.println("remove temp files:"+projecttemppath.getCanonicalPath());
+				log.info("remove temp files:"+projecttemppath.getCanonicalPath());
 				FileUtil.removeFileOrDirectory(projecttemppath.getCanonicalPath());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -211,43 +213,89 @@ public class GenService {
 	}
 	private void handleArches() throws Exception
 	{
-		Thread warthread = null;
-		Thread dbthread = null;
+//		Thread warthread = null;
+//		Thread dbthread = null;
 		final ExceptionContainer container = new ExceptionContainer();
 		if(war == null || war.trim().length() == 0)
 		{
 			if(projectarchpath != null)
 			{
-				war = new File(projectarchpath,"bboss.war").getCanonicalPath();
-				System.out.println("use war file "+war );
+				File files[] =projectarchpath.listFiles();
+				if(files != null && files.length > 0)
+				{
+					for(File f:files)
+					{
+						if(f.getName().endsWith(".war"))
+						{
+							this.war = f.getCanonicalPath();
+							break;
+						}
+					}
+				}
+				log.info("use war file "+war );
 			}
 		}
 		else if(war.startsWith("http://"))
 		{
-			warthread = new Thread(new Runnable(){
-
-				public void run() {
-					try {
-						System.out.println("download war file from "+war +" starting....");
-						UrlResource url = new UrlResource(war);
-						File tempwar = new File(projecttemppath,handleFilename(url.getFilename()));
-						url.savetofile(tempwar);
-						System.out.println("download war file from "+war+" sucessed.");
-						war = tempwar.getCanonicalPath();
-					} catch (Exception e) {
+			final UrlResource url = new UrlResource(war);
+			try
+			{
+				Runnable run = new Runnable(){
+	
+					public void run() {
+						try {
+	//						System.out.println("download war file from "+war +" starting....");
+							
+							File tempwar = new File(projecttemppath,handleFilename(url.getFilename()));
 						
-						container.war = e;
+							
+							final TraceStatus traceStatus = new TraceStatus(url,tempwar);
+						 
+							 
+							url.savetofile(tempwar,new ResourceHandleListener<UrlResource>() {
+								
+								@Override
+								public void startEvent(UrlResource resource,File dest) {
+									
+									traceStatus.start(); 
+									
+								}
+								
+								@Override
+								public void handleDataEvent(UrlResource resource,File dest) {
+									
+									traceStatus.refreshprocess();
+								}
+								
+								@Override
+								public void endEvent(UrlResource resource,File dest) {
+									traceStatus.end();
+									
+								}
+							});
+							traceStatus.join();
+	//						System.out.println("download war file from "+war+" sucessed.");
+							war = tempwar.getCanonicalPath();
+						} catch (Exception e) {
+							
+							container.war = e;
+						}
+						
 					}
 					
-				}
-				
-			});
-			warthread.start();
-			
+				};
+				run.run();
+			}
+			finally
+			{
+				if(url != null)
+					url.release();
+			}
+		
 		}
 		else
 		{
-			System.out.println("use war file "+war );
+			log.info("use war file "+war );
 		}
 		
 		
@@ -255,21 +303,59 @@ public class GenService {
 		{
 			if(projectarchpath != null)
 			{
-				db_init_tool = new File(projectarchpath,"dbinit-system.zip").getCanonicalPath();
-				System.out.println("use db_init_tool file "+db_init_tool );
+				File files[] =projectarchpath.listFiles();
+				if(files != null && files.length > 0)
+				{
+					for(File f:files)
+					{
+						if(f.getName().endsWith(".zip"))
+						{
+							this.db_init_tool = f.getCanonicalPath();
+							break;
+						}
+					}
+				}
+//				db_init_tool = new File(projectarchpath,"dbinit-system.zip").getCanonicalPath();
+				log.info("use db_init_tool file "+db_init_tool );
 			}
 		}
 		else if(db_init_tool.startsWith("http://"))
 		{
-			
-			dbthread = new Thread(new Runnable(){
+			final 	UrlResource url = new UrlResource(db_init_tool);
+			Runnable run = new Runnable(){
 				public void run() {
 					try {
-						System.out.println("download db_init_tool file from "+db_init_tool +" starting....");
-						UrlResource url = new UrlResource(db_init_tool);
+//						System.out.println("download db_init_tool file from "+db_init_tool +" starting....");
+					
 						File tempzip = new File(projecttemppath,handleFilename(url.getFilename()));
-						url.savetofile(tempzip);
-						System.out.println("download db_init_tool file from "+db_init_tool+" sucessed.");
+ 
+						
+						final TraceStatus traceStatus = new TraceStatus(url,tempzip);
+					 
+						 
+						url.savetofile(tempzip,new ResourceHandleListener<UrlResource>() {
+							
+							@Override
+							public void startEvent(UrlResource resource,File dest) {
+								
+								traceStatus.start(); 
+								
+							}
+							
+							@Override
+							public void handleDataEvent(UrlResource resource,File dest) {
+								
+								traceStatus.refreshprocess();
+							}
+							
+							@Override
+							public void endEvent(UrlResource resource,File dest) {
+								traceStatus.end();
+								
+							}
+						});
+						traceStatus.join();
+//						System.out.println("download db_init_tool file from "+db_init_tool+" sucessed.");
 						db_init_tool = tempzip.getCanonicalPath(); 
 					} catch (Exception e) {
 						
@@ -278,30 +364,30 @@ public class GenService {
 					
 				}
 				
-			});
-			dbthread.start();
+			};
+			run.run();
 			
 		}
 		else
 		{
-			System.out.println("use db_init_tool file "+db_init_tool );
+			log.info("use db_init_tool file "+db_init_tool );
 		}
-		if(warthread != null)
-		{
-			try {
-				warthread.join();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		if(dbthread != null)
-			try {
-				dbthread.join();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//		if(warthread != null)
+//		{
+//			try {
+//				warthread.join();
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//		if(dbthread != null)
+//			try {
+//				dbthread.join();
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 		if(container.db != null)
 		{
 			if(container.war != null)
@@ -330,12 +416,12 @@ public class GenService {
 			{
 //				${dbinitdisk}
 				context.put("dbinitdisk",dir.substring(0,dir.indexOf(':')+1));
-				System.out.println("cd "+dir);
+				 
 				context.put("dbinitpath", "cd "+dir);
 			}
 			else
 			{
-				System.out.println("cd "+dir);
+				log.info("cd "+dir);
 				context.put("dbinitpath", "cd "+dir + ";");
 			}
 			
@@ -459,7 +545,7 @@ public class GenService {
 //					System.out.println(line);
 //				System.out.println("");
 				int exitVal = proc.waitFor();
-				System.out.println("初始化数据库完毕! " );
+				log.info("初始化数据库完毕! " );
 			} catch (Throwable t) {
 				t.printStackTrace();
 			}
@@ -628,7 +714,9 @@ public class GenService {
 	{
 //		String dir ="d:/aaa";
 //		System.out.println(dir.substring(0,dir.indexOf(':')+1));
-		UrlResource url = new UrlResource("http://nj02.poms.baidupcs.com/file/79aeb2e91792629ca55304fe7356c143?bkt=p2-nj-384&fid=4245631570-250528-570552330597386&time=1438527441&sign=FDTAXGERLBH-DCb740ccc5511e5e8fedcff06b081203-zby2yWBB84wb%2B%2FgHnvKrJJHxWwM%3D&to=n2b&fm=Nan,B,G,nc&sta_dx=10&sta_cs=0&sta_ft=zip&sta_ct=0&fm2=Nanjing02,B,G,nc&newver=1&newfm=1&secfm=1&flow_ver=3&pkey=0000c56d3a217528d115fadefe3cded71ec5&sl=82903119&expires=8h&rt=pr&r=636645352&mlogid=796086098&vuk=4245631570&vbdid=1671589608&fin=dbinit-system.zip&fn=dbinit-system.zip&slt=pm&uta=0&rtype=1&iv=0&isw=0");
+//		UrlResource url = new UrlResource("http://nj02.poms.baidupcs.com/file/79aeb2e91792629ca55304fe7356c143?bkt=p2-nj-384&fid=4245631570-250528-570552330597386&time=1438527441&sign=FDTAXGERLBH-DCb740ccc5511e5e8fedcff06b081203-zby2yWBB84wb%2B%2FgHnvKrJJHxWwM%3D&to=n2b&fm=Nan,B,G,nc&sta_dx=10&sta_cs=0&sta_ft=zip&sta_ct=0&fm2=Nanjing02,B,G,nc&newver=1&newfm=1&secfm=1&flow_ver=3&pkey=0000c56d3a217528d115fadefe3cded71ec5&sl=82903119&expires=8h&rt=pr&r=636645352&mlogid=796086098&vuk=4245631570&vbdid=1671589608&fin=dbinit-system.zip&fn=dbinit-system.zip&slt=pm&uta=0&rtype=1&iv=0&isw=0");
+		UrlResource url = new UrlResource("http://www.bbossgroups.com/tool/download.htm?fileName=bboss.war");
+		
 		url.savetofile(new File("d:/test.zip"));
 	}
 }
