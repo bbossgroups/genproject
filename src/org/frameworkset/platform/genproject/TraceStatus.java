@@ -80,7 +80,7 @@ public class TraceStatus extends Thread{
 				}
 				
 			} catch (IOException e) {							
-				
+				log.error("下载文件失败：",e);
 				break;
 			} catch (InterruptedException e) {				
 					break;

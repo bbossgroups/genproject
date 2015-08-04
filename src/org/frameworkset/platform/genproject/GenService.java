@@ -134,11 +134,9 @@ public class GenService {
 			copydepenglibs();
 			initDB();
 		} catch (ZipException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("解压失败",e);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("生成工程失败",e);
 		}
 	}
 	private void gentomcatdeploy()
@@ -158,7 +156,7 @@ public class GenService {
 			writer.flush();
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("生成tomcat部署文件失败",e);
 		} finally {
 			if (out != null)
 				try {
@@ -392,7 +390,10 @@ public class GenService {
 		if(container.db != null)
 		{
 			if(container.war != null)
-				container.war.printStackTrace();
+			{
+				
+				log.error("",container.war);
+			}
 			throw container.db;
 		}
 		if(container.war != null)
@@ -433,7 +434,7 @@ public class GenService {
 			writer.flush();
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("设置数据库初始化环境信息失败：",e);
 		} finally {
 			if (out != null)
 				try {
@@ -474,7 +475,7 @@ public class GenService {
 			writer.flush();
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("还原数据库初始化环境信息失败：",e);
 		} finally {
 			if (out != null)
 				try {
@@ -506,8 +507,7 @@ public class GenService {
 		try {
 			int exitVal = proc.waitFor();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("授予执行数据库初始化指令执行权限失败：",e);
 		}
 	}
 	private void initDB() throws IOException {
@@ -548,7 +548,7 @@ public class GenService {
 				int exitVal = proc.waitFor();
 				log.info("初始化数据库完毕! " );
 			} catch (Throwable t) {
-				t.printStackTrace();
+				log.error("执行数据库初始化指令失败：",t);
 			}
 			finally
 			{
@@ -583,7 +583,7 @@ public class GenService {
 					"templates/project/.classpath");
 			resource.savetofile(new File(this.projectpath, ".classpath"));
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("生成java工程文件失败：",e);
 		} finally {
 			if (out != null)
 				try {
@@ -632,7 +632,7 @@ public class GenService {
 					new File(this.projectdbinitpath, "resources")
 							.getAbsolutePath());
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("生成数据库连接池配置文件失败：",e);
 		} finally {
 			if (out != null)
 				try {
@@ -678,7 +678,7 @@ public class GenService {
 			resource = new ClassPathResource("templates/ant/buildjar.bat");
 			resource.savetofile(new File(this.projectpath, "buildjar.bat"));
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("生成ant构建文件失败：",e);
 		} finally {
 			if (out != null)
 				try {
