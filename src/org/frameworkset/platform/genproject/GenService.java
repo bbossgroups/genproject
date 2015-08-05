@@ -297,7 +297,8 @@ public class GenService {
 			log.info("use war file "+war );
 		}
 		
-		
+		if(container.war != null)
+			throw container.war ;
 		if(db_init_tool == null || db_init_tool.trim().length() == 0)
 		{
 			if(projectarchpath != null)
@@ -389,15 +390,10 @@ public class GenService {
 //			}
 		if(container.db != null)
 		{
-			if(container.war != null)
-			{
-				
-				log.error("",container.war);
-			}
+			
 			throw container.db;
 		}
-		if(container.war != null)
-			throw container.war;
+		
 	}
 	private void unzipArchs() throws  Exception {
 		handleArches();
