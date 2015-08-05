@@ -36,7 +36,7 @@ public class TraceStatus extends Thread{
 					StringBuilder builder = new StringBuilder();
 					builder.append(newsize).append("/").append(url.getTotalsize()).append(",Percent:").append(formater.format(rate));
 					oldput = builder.toString();
-					System.out.print("download file "+this.dest.getName()+" from "+url.getURL() + " to "+dest.getParent()+"\r\nDownload Size(Bytes):"+oldput);
+					System.out.print("download "+this.dest.getName()+" from "+url.getURL() + " to "+dest.getParent()+"\r\nDownload Size(Bytes):"+oldput);
 					
 					 
 					first = false;
