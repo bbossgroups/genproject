@@ -111,7 +111,8 @@ public class GenService {
 	}
 	public void clean()
 	{
-		if (projecttemppath.exists())
+		String cleantemp = CommonLauncher.getProperty("cleantemp", "true");
+		if (cleantemp.equals("true") && projecttemppath.exists())
 		{
 			try {
 				log.info("remove temp files:"+projecttemppath.getCanonicalPath());
