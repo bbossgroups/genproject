@@ -491,9 +491,14 @@ public class GenService {
 	}
 	private void chmodx() throws IOException
 	{
-		Process proc = Runtime.getRuntime().exec("chmod +x -R "+
-				this.projectdbinitpath
-						.getCanonicalPath());
+		Process proc = !CommonLauncher.isOSX()?
+				Runtime.getRuntime().exec("chmod +x -R "+
+				this.projectpath
+						.getCanonicalPath()):
+							
+				Runtime.getRuntime().exec("chmod -R +x "+
+									this.projectpath
+											.getCanonicalPath())			;
 		StreamGobbler error = new StreamGobbler( proc.getErrorStream(),"ERROR");
 		
 		StreamGobbler normal = new StreamGobbler( proc.getInputStream(),"NORMAL");
