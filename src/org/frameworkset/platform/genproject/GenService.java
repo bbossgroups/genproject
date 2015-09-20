@@ -102,7 +102,7 @@ public class GenService {
 		driverClassName = CommonLauncher.getProperty("driverClassName");// 要生成的工程目录
 		url = CommonLauncher.getProperty("url");// 要生成的工程目录
 		username = CommonLauncher.getProperty("username");// 要生成的工程目录
-		password = CommonLauncher.getProperty("password");// 要生成的工程目录
+		password = CommonLauncher.getProperty("password",false);// 要生成的工程目录
 		validationQuery = CommonLauncher.getProperty("validationQuery",
 				"");// 要生成的工程目录
 		db_init_tool = CommonLauncher.getProperty("db_init_tool");// 要生成的工程目录
