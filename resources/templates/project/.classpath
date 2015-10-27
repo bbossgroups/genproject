@@ -49,7 +49,7 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/iTextAsian.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/iWebFile2005.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jaas.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jackson-all-1.6.2.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jackson-all-1.9.10.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jakarta-oro-2.0.8.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jasypt-1.6.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/javassist.jar"/>
