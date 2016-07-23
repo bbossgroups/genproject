@@ -1,0 +1,153 @@
+configure(allprojects) { project ->
+	group = PROJ_GROUP
+	version = PROJ_VERSION	
+	ext.bboss_version=PROJ_BBOSS_VERSION
+	apply plugin: "java"
+	apply plugin: "maven-publish"
+	apply plugin: "eclipse"
+	apply plugin: "idea"
+	apply plugin: "signing"
+	apply plugin: "maven"
+	eclipse {
+		jdt {
+			//if you want to alter the java versions (by default they are configured with gradle java plugin settings):
+			sourceCompatibility = SOURCE_COMPILER_LEVEL
+			targetCompatibility = TARGET_COMPILER_LEVEL
+			//javaRuntimeName = "../../org.eclipse.jdt.launching.JRE_CONTAINER"
+
+		}
+	}
+
+	tasks.withType(JavaCompile) {
+		
+		sourceCompatibility = SOURCE_COMPILER_LEVEL
+		targetCompatibility = TARGET_COMPILER_LEVEL
+		options.encoding = 'UTF-8'
+	}
+
+	tasks.withType(Javadoc) {
+		sourceCompatibility = JAVADOC_SOURCE_LEVEL
+		targetCompatibility = JAVADOC_COMPILER_LEVEL
+		options.encoding = 'UTF-8'
+	}
+
+	jar {
+		manifest {
+			attributes (
+					'Implementation': version,
+					'Specification-Version': version,
+					'Implementation-Vendor': 'bbossgroups',
+					'Implementation-ProductID': project.name,
+					'Compile-Timestamp': new Date().format('yyyy-MM-dd HH:mm:ss'),
+					'Compile-User': DEVELOPER_NAME
+			)
+		}
+	}
+
+
+	dependencies {
+		testCompile 'junit:junit:4.12'
+		
+		 
+	}
+
+	repositories {
+		mavenLocal()
+		mavenCentral()
+		
+		
+	}
+	if(project.getProperty('skipTest').equals("true"))
+	{
+		compileTestJava.enabled=false
+		processTestResources.enabled=false
+		testClasses.enabled = false
+		test.enabled = false  
+	}
+}
+
+ 
+
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+           
+        }
+       compileClasspath = configurations.compile + configurations.runtime
+    }
+    test {
+        java {
+            srcDir 'test'
+        }
+         resources{
+        	srcDir 'resources'
+        }
+    }
+    
+}
+
+dependencies {
+    compile (
+    
+              [group: 'log4j', name: 'log4j', version: '1.2.16', transitive: false],
+            [group: 'com.bbossgroups', name: 'bboss-util', version: "${bboss_version}", transitive: false],
+             [group: 'com.bbossgroups', name: 'bboss-core', version: "${bboss_version}", transitive: false],
+             [group: 'com.bbossgroups', name: 'bboss-velocity', version: "${bboss_version}", transitive: false],
+             
+              [group: 'oro', name: 'oro', version: '2.0.8', transitive: false],
+              [group: 'commons-lang', name: 'commons-lang', version: '2.6', transitive: false],
+              [group: 'commons-logging', name: 'commons-logging', version: '1.1', transitive: false],
+            [group: 'commons-collections', name: 'commons-collections', version: '3.2.1', transitive: false],
+             [group: 'com.fasterxml.uuid', name: 'java-uuid-generator', version: '3.1.2', transitive: false],
+              
+             [group: 'commons-io', name: 'commons-io', version: '2.4', transitive: false],
+             [group: 'org.slf4j', name: 'slf4j-api', version: '1.7.10', transitive: false],
+	            
+	            [group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.10', transitive: false],
+	            
+    )
+
+	runtime(
+		[group: 'com.bbossgroups', name: 'bboss-rt', version: "${PROJ_BBOSS_VERSION}", transitive: false],
+    )
+}
+
+
+
+
+
+task copyLibFiles(type: Copy ){ 
+	from jar.outputs
+	from configurations.compile 
+	into 'build/dist/genproject/lib'
+}
+task copyResourceFiles(type: Copy ){ 
+	from fileTree(dir: 'resources')
+	into 'build/dist/genproject/resources'
+}
+
+ 
+task copyToolFiles(type: Copy ){
+	 
+	from ('runtime')
+	{
+		expand(bboss_version: "${PROJ_BBOSS_VERSION}",main_class:'org.frameworkset.platform.genproject.GenProject')
+		
+	} 
+    from configurations.runtime - configurations.compile
+    //filteringCharset = 'UTF-8'            
+	into 'build/dist/genproject'
+	 
+}
+project.tasks.copyLibFiles.dependsOn(project.tasks.install) 
+task releaseRuntimeZip(type: Zip,dependsOn:['copyToolFiles','copyResourceFiles','copyLibFiles']) {
+    //appendix = 'wrapper'
+   baseName='genproject'
+   from 'build/dist/genproject'
+   
+}
+
+ 
+ 

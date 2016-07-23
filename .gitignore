@@ -6,3 +6,9 @@
 /genproject.log
 /distrib
 /build.log
+/.settings/
+/.classpath
+/.project
+/build/
+/bin/
+/.gradle/
