@@ -137,7 +137,7 @@ task copyToolFiles(type: Copy ){
 		
 	} 
     from configurations.runtime - configurations.compile
-    //filteringCharset = 'UTF-8'            
+    filteringCharset = 'UTF-8'            
 	into 'build/dist/genproject'
 	 
 }

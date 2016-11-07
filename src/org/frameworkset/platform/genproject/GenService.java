@@ -2,6 +2,7 @@ package org.frameworkset.platform.genproject;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -13,14 +14,15 @@ import org.apache.log4j.Logger;
 import org.frameworkset.runtime.CommonLauncher;
 import org.frameworkset.util.io.AbstractResource;
 import org.frameworkset.util.io.ClassPathResource;
+import org.frameworkset.util.io.Resource;
 import org.frameworkset.util.io.ResourceHandleListener;
 import org.frameworkset.util.io.UrlResource;
 
-import bboss.org.apache.velocity.Template;
-import bboss.org.apache.velocity.VelocityContext;
-
 import com.frameworkset.util.FileUtil;
 import com.frameworkset.util.VelocityUtil;
+
+import bboss.org.apache.velocity.Template;
+import bboss.org.apache.velocity.VelocityContext;
 
 public class GenService {
 	private static Logger log = Logger.getLogger(GenService.class);
@@ -44,6 +46,7 @@ public class GenService {
 	private File projectlibcompilepath;
 
 	private File projectwebrootpath;
+	private File projectwebrootlibpath;
 	private File projectsrcpath;
 	private File projectsrctestpath;
 	private File projectdbinitpath;
@@ -65,6 +68,7 @@ public class GenService {
 		projectpath = new File(eclipseworkspace, projectname);
 		projectdbinitpath = new File(projectpath, "dbinit-system");
 		projectwebrootpath = new File(projectpath, "WebRoot");
+		projectwebrootlibpath = new File(projectpath, "WebRoot/WEB-INF/lib");
 		projectresourcepath = new File(projectpath, "resources");
 		projectlibcompilepath = new File(projectpath, "lib-compile");
 		projecttemppath  = new File(projectpath, "temp");
@@ -105,8 +109,8 @@ public class GenService {
 		password = CommonLauncher.getProperty("password",false);// 要生成的工程目录
 		validationQuery = CommonLauncher.getProperty("validationQuery",
 				"");// 要生成的工程目录
-		db_init_tool = CommonLauncher.getProperty("db_init_tool");// 要生成的工程目录
-		war = CommonLauncher.getProperty("war");// 要生成的工程目录
+		db_init_tool = CommonLauncher.getProperty("db_init_tool","E:\\workspace\\bbossgroups\\bboss-cms\\dbinit-system\\dbinit-system.zip");// 要生成的工程目录
+		war = CommonLauncher.getProperty("war","E:\\workspace\\bbossgroups\\bboss-cms\\pdp\\build\\libs\\pdp-4.10.9.war");// 要生成的工程目录
 
 	}
 	public void clean()
@@ -132,7 +136,7 @@ public class GenService {
 			copyresources();
 			genProject();
 			gentomcatdeploy();
-			copydepenglibs();
+			
 			initDB();
 		} catch (ZipException e) {
 			log.error("解压失败",e);
@@ -176,14 +180,31 @@ public class GenService {
 		}
 	}
 	
-	private void copydepenglibs() throws IOException
+	private void copydepenglibs(final StringBuilder classpath) throws IOException
 	{
-		ClassPathResource resource = new ClassPathResource(
-				"templates/lib-compile/javaee.jar");
-		resource.savetofile(new File(this.projectlibcompilepath, "javaee.jar"));
-		resource = new ClassPathResource(
-				"templates/lib-compile/junit-4.6.jar");
-		resource.savetofile(new File(this.projectlibcompilepath, "junit-4.6.jar"));
+		File[] compilejars = new File("resources/templates/lib-compile/").listFiles(new FilenameFilter(){
+
+			@Override
+			public boolean accept(File dir, String name) {
+				// TODO Auto-generated method stub
+				if( name.endsWith(".jar"))
+				{
+					classpath.append("	<classpathentry kind=\"lib\" path=\"lib-compile/").append(name).append("\"/>\r\n");
+					return true;
+				}
+				return false;
+			}
+			
+		});
+		for(int i = 0; i < compilejars.length; i ++)
+		{
+			FileUtil.fileCopy(compilejars[i], new File(this.projectlibcompilepath, compilejars[i].getName()));
+			
+		}
+//		ClassPathResource resource = new ClassPathResource("templates/lib-compile/javaee.jar");
+//		resource.savetofile(new File(this.projectlibcompilepath, "javaee.jar"));
+//		resource = new ClassPathResource("templates/lib-compile/junit-4.6.jar");
+//		resource.savetofile(new File(this.projectlibcompilepath, "junit-4.6.jar"));
 	}
 	
 
@@ -411,12 +432,15 @@ public class GenService {
 			Template antbuild = VelocityUtil.getTemplate(startuppath);
 			VelocityContext context = new VelocityContext();// VelocityUtil.buildVelocityContext(context)
 			String dir = projectdbinitpath.getCanonicalPath();
+			String bboss_version = CommonLauncher.getProperty("bboss_version", "5.0.1");
+			context.put("bboss_version", bboss_version);
 			if (CommonLauncher.isWindows())
 			{
 //				${dbinitdisk}
 				context.put("dbinitdisk",dir.substring(0,dir.indexOf(':')+1));
 				 
 				context.put("dbinitpath", "cd "+dir);
+				
 			}
 			else
 			{
@@ -534,7 +558,7 @@ public class GenService {
 							new File(this.projectdbinitpath, "/startup.sh")
 									.getCanonicalPath());
 				}
-				StreamGobbler error = new StreamGobbler( proc.getErrorStream(),"ERROR");
+				StreamGobbler error = new StreamGobbler( proc.getErrorStream(),"INFO");
 				
 				StreamGobbler normal = new StreamGobbler( proc.getInputStream(),"NORMAL");
 				error.start();
@@ -568,6 +592,23 @@ public class GenService {
 		}
 	}
 
+	private void getClasspathInfo(final StringBuilder classpath )
+	{
+		
+		this.projectwebrootlibpath.listFiles(new FilenameFilter(){
+
+			@Override
+			public boolean accept(File dir, String name) {
+				
+				if( name.endsWith(".jar"))
+					classpath.append("	<classpathentry kind=\"lib\" path=\"WebRoot/WEB-INF/lib/").append(name).append("\"/>\r\n");
+				return false;
+			}
+			
+		});
+		classpath.append("	<classpathentry kind=\"output\" path=\"WebRoot/WEB-INF/classes\"/>\r\n");
+		
+	}
 	private void genjavaprojectfile() {
 
 		Writer writer = null;
@@ -581,9 +622,21 @@ public class GenService {
 			writer = new OutputStreamWriter(out,Charsets.UTF_8);			 
 			antbuild.merge(context, writer);
 			writer.flush();
-			ClassPathResource resource = new ClassPathResource(
-					"templates/project/.classpath");
-			resource.savetofile(new File(this.projectpath, ".classpath"));
+//			ClassPathResource resource = new ClassPathResource(
+//					"templates/project/.classpath");
+//			resource.savetofile(new File(this.projectpath, ".classpath"));
+			StringBuilder classpath = new StringBuilder();	
+			classpath.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n")
+			.append("<classpath>\r\n")
+			.append("	<classpathentry kind=\"src\" path=\"src\"/>\r\n")
+			.append("	<classpathentry kind=\"src\" path=\"src-test\"/>\r\n")
+			.append("	<classpathentry kind=\"src\" path=\"resources\"/>\r\n")
+			.append("	<classpathentry kind=\"con\" path=\"org.eclipse.jdt.launching.JRE_CONTAINER\"/>\r\n");
+			copydepenglibs(classpath);
+			getClasspathInfo( classpath );
+			classpath.append("</classpath>");
+			FileUtil.writeFile(new File(this.projectpath, ".classpath"), classpath.toString(),"UTF-8");
+
 		} catch (Exception e) {
 			log.error("生成java工程文件失败：",e);
 		} finally {

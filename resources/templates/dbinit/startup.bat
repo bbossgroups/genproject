@@ -1,4 +1,4 @@
 ${dbinitdisk}
 ${dbinitpath}
-java -jar bboss-rt.jar > startup.log
+java -jar bboss-rt-${bboss_version}.jar > startup.log
 
