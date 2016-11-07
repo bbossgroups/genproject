@@ -109,8 +109,10 @@ public class GenService {
 		password = CommonLauncher.getProperty("password",false);// 要生成的工程目录
 		validationQuery = CommonLauncher.getProperty("validationQuery",
 				"");// 要生成的工程目录
-		db_init_tool = CommonLauncher.getProperty("db_init_tool","E:\\workspace\\bbossgroups\\bboss-cms\\dbinit-system\\dbinit-system.zip");// 要生成的工程目录
-		war = CommonLauncher.getProperty("war","E:\\workspace\\bbossgroups\\bboss-cms\\pdp\\build\\libs\\pdp-4.10.9.war");// 要生成的工程目录
+//		db_init_tool = CommonLauncher.getProperty("db_init_tool","E:\\workspace\\bbossgroups\\bboss-cms\\dbinit-system\\dbinit-system.zip");// 要生成的工程目录
+//		war = CommonLauncher.getProperty("war","E:\\workspace\\bbossgroups\\bboss-cms\\pdp\\build\\libs\\pdp-4.10.9.war");// 要生成的工程目录
+		db_init_tool = CommonLauncher.getProperty("db_init_tool");// 要生成的工程目录
+		war = CommonLauncher.getProperty("war");// 要生成的工程目录
 
 	}
 	public void clean()
