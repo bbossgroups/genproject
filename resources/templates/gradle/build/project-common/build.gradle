@@ -1,0 +1,62 @@
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+           
+        }
+        resources {
+			srcDirs 'src/main/resources'
+			srcDir 'src/main/java'  exclude '**/*.java'
+        }
+        
+    }
+    test {
+        java {
+            srcDir 'test/main/java'
+           
+        }
+        resources {
+			srcDirs 'test/main/resources'
+			srcDir 'test/main/java'  exclude '**/*.java'
+        }
+        
+    }
+    
+}
+dependencies {
+	
+   compile (    	            
+   			[group: 'com.bbossgroups.pdp', name: 'pdp-trans', version: "${bboss_pdp_version}", transitive: false],
+			[group: 'com.bbossgroups.pdp', name: 'pdp-wx', version: "${bboss_pdp_version}", transitive: false],
+			[group: 'com.bbossgroups.pdp', name: 'pdp-cms', version: "${bboss_pdp_version}", transitive: false],
+			[group: 'com.bbossgroups.pdp', name: 'pdp-application', version: "${bboss_pdp_version}", transitive: false],
+			[group: 'com.bbossgroups.pdp', name: 'pdp-ldap', version: "${bboss_pdp_version}", transitive: false],
+    		[group: 'com.bbossgroups.pdp', name: 'pdp-desktop', version: "${bboss_pdp_version}", transitive: false],
+			[group: 'com.bbossgroups.pdp', name: 'pdp-datasource', version: "${bboss_pdp_version}", transitive: false],
+			[group: 'com.bbossgroups.pdp', name: 'pdp-appbom', version: "${bboss_pdp_version}", transitive: false],
+			[group: 'com.bbossgroups.pdp', name: 'pdp-appmonitor', version: "${bboss_pdp_version}", transitive: false],
+			[group: 'com.bbossgroups.pdp', name: 'pdp-mail', version: "${bboss_pdp_version}", transitive: false],
+			[group: 'com.bbossgroups.pdp', name: 'pdp-wordpdfdemo', version: "${bboss_pdp_version}", transitive: false],
+			[group: 'com.bbossgroups.pdp', name: 'pdp-masterdata', version: "${bboss_pdp_version}", transitive: false],
+			[group: 'com.bbossgroups.pdp', name: 'pdp-log', version: "${bboss_pdp_version}", transitive: false],
+			[group: 'com.bbossgroups.pdp', name: 'pdp-sanymbp', version: "${bboss_pdp_version}", transitive: false],
+			[group: 'com.bbossgroups.pdp', name: 'pdp-sap', version: "${bboss_pdp_version}", transitive: false],
+			[group: 'com.bbossgroups.pdp', name: 'pdp-sms', version: "${bboss_pdp_version}", transitive: false],
+			[group: 'com.bbossgroups.pdp', name: 'pdp-workflow-web', version: "${bboss_pdp_version}", transitive: false],
+			[group: 'com.bbossgroups.pdp', name: 'pdp-workflow', version: "${bboss_pdp_version}", transitive: false],
+			[group: 'com.bbossgroups.pdp', name: 'pdp-workflow-bussiness', version: "${bboss_pdp_version}", transitive: false],
+			[group: 'com.bbossgroups.pdp', name: 'pdp-workflow-demo', version: "${bboss_pdp_version}", transitive: false],
+			[group: 'com.bbossgroups.pdp', name: 'pdp-system', version: "${bboss_pdp_version}", transitive: true],
+			[group: 'commons-digester', name: 'commons-digester', version: "2.1", transitive: false],     
+			[group: 'commons-codec', name: 'commons-codec', version: "1.10", transitive: false],     
+			[group: 'org.apache.httpcomponents', name: 'httpclient', version: "4.4.1", transitive: false],     
+			[group: 'org.apache.httpcomponents', name: 'httpcomponents-client', version: "4.4.1", transitive: false],     
+			[group: 'org.apache.httpcomponents', name: 'httpcomponents-core', version: "4.4.1", transitive: false],     
+			[group: 'org.apache.httpcomponents', name: 'httpcore', version: "4.4.1", transitive: false],     
+			[group: 'net.sf.ezmorph', name: 'ezmorph', version: "1.0.4", transitive: false],     
+    
+    )
+    testCompile(
+    		 
+    )
+}

@@ -1,0 +1,39 @@
+ 
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+           
+        }
+        resources {
+			srcDirs 'src/main/resources'
+			srcDir 'src/main/java'  exclude '**/*.java'
+        }
+        
+    }
+    test {
+        java {
+            srcDir 'test/main/java'
+           
+        }
+        resources {
+			srcDirs 'test/main/resources'
+			srcDir 'test/main/java'  exclude '**/*.java'
+        }
+        
+    }
+    
+}
+
+
+project.tasks.compileJava.dependsOn(project(':${projectname}-common').tasks.install)
+dependencies {
+    compile(
+    	[group: '${PROJ_GROUP}', name: '${projectname}-common', version: "${PROJ_VERSION}", transitive: true],   
+      
+     )
+    
+           
+    
+     
+}

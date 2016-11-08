@@ -1,0 +1,44 @@
+apply plugin: "war"
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+           
+        }
+        resources {
+			srcDirs 'src/main/resources'
+			srcDir 'src/main/java'  exclude '**/*.java'
+        }
+        
+    }
+    test {
+        java {
+            srcDir 'test/main/java'
+           
+        }
+        resources {
+			srcDirs 'test/main/resources'
+			srcDir 'test/main/java'  exclude '**/*.java'
+        }
+        
+    }
+    
+}
+
+
+webAppDirName = 'src/main/webapp'  
+project.tasks.compileJava.dependsOn(project(':${projectname}-service').tasks.install)
+dependencies {
+
+
+    compile (
+            [group: '${PROJ_GROUP}', name: '${projectname}-service', version: "${PROJ_VERSION}", transitive: true],   
+    )
+ 
+    compile ( 
+        
+	         fileTree(dir: '../lib', include: '**/*.jar'),
+	    )
+    
+     
+}
