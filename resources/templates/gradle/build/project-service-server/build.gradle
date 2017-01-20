@@ -27,13 +27,11 @@ sourceSets {
 
 
 webAppDirName = 'src/main/webapp'  
-project.tasks.compileJava.dependsOn(project(':${projectname}-service').tasks.install)
+
 dependencies {
 
-
-    compile (
-            [group: '${PROJ_GROUP}', name: '${projectname}-service', version: "${PROJ_VERSION}", transitive: true],   
-    )
+		compile project(':${projectname}-service')
+    
  
     compile ( 
         

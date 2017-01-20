@@ -13,11 +13,11 @@ public class GenProject {
 
 	public static void main(String[] args) {
 		Gen service = null;
-		String projecttype = CommonLauncher.getProperty("projecttype", "gradle");
+		String projecttype = CommonLauncher.getProperty("projecttype", "gradle2");
 		if(projecttype.equals("ant"))
 			service = new GenService();
-		else if(projecttype.equals("gradle"))
-			service = new GenGradleService();
+		else if(projecttype.equals("gradle") || projecttype.equals("gradle2"))
+			service = new GenGradleService(projecttype);
 		service.setApprootdir(appdir);
 		
 		service.setProjecttype(projecttype);

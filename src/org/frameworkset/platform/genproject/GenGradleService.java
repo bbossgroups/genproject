@@ -67,21 +67,24 @@ public class GenGradleService  extends BaseGen{
 	protected String scm_url="svn://139.224.19.207/trunk/";
 	protected String uploadArchivesToMavenCenter="false";
 	protected String Implementation_Vendor="wowo";
+	protected String SECURITY_PROJ_VERSION = "5.0.2.4";
+	protected String projecttype;
 	/**
 	 * gradle属性文件定义结束
 	 */
-	public GenGradleService() {
+	public GenGradleService(String projecttype) {
+		this.projecttype = projecttype;
 		// TODO Auto-generated constructor stub
 	}
 	private void initGradleProperties()
 	{
 		PROJ_GROUP=CommonLauncher.getProperty("PROJ_GROUP","com.wowo");
 		PROJ_VERSION=CommonLauncher.getProperty("PROJ_VERSION","1.0.0");
-		jacksonversion=CommonLauncher.getProperty("jacksonversion","2.8.1");
-		bboss_version = CommonLauncher.getProperty("bboss_version","5.0.1");
-		bboss_pdp_version = CommonLauncher.getProperty("bboss_pdp_version","4.10.9");
+		jacksonversion=CommonLauncher.getProperty("jacksonversion","2.8.5");
+		bboss_version = CommonLauncher.getProperty("bboss_version","5.0.2.4");
+		bboss_pdp_version = CommonLauncher.getProperty("bboss_pdp_version","5.0.1");
 		bboss_wordpdf_version = CommonLauncher.getProperty("bboss_wordpdf_version","4.10.9");
-		WF_VERSION = CommonLauncher.getProperty("WF_VERSION","5.12");
+		WF_VERSION = CommonLauncher.getProperty("WF_VERSION","5.12.1");
 		mongodbversion = CommonLauncher.getProperty("mongodbversion","3.2.2");
 		bboss_rpc_version = CommonLauncher.getProperty("bboss_rpc_version","4.10.9");
 
@@ -103,6 +106,8 @@ public class GenGradleService  extends BaseGen{
 		scm_url = CommonLauncher.getProperty("scm_url","svn://139.224.19.207/trunk/");
 		uploadArchivesToMavenCenter = CommonLauncher.getProperty("uploadArchivesToMavenCenter","false");
 		Implementation_Vendor = CommonLauncher.getProperty("Implementation_Vendor","wowo");
+		
+		SECURITY_PROJ_VERSION  = CommonLauncher.getProperty("SECURITY_PROJ_VERSION","5.0.2.4");
 	}
 	
 	public void init() throws Exception {
@@ -204,7 +209,7 @@ public class GenGradleService  extends BaseGen{
 	
 	private void copydepenglibs() throws IOException
 	{
-		File[] compilejars = new File("resources/templates/gradle/lib/").listFiles(new FilenameFilter(){
+		File[] compilejars = new File("resources/templates/"+projecttype+"/lib/").listFiles(new FilenameFilter(){
 
 			@Override
 			public boolean accept(File dir, String name) {
@@ -230,11 +235,13 @@ public class GenGradleService  extends BaseGen{
 	
 
 	private void copyresources() throws IOException {
+		log.info("copy "+new File(project_web_webrootpath, "WEB-INF/classes").getAbsolutePath() + " to "+this.project_web_resources.getAbsolutePath());
 		FileUtil.copy(new File(project_web_webrootpath, "WEB-INF/classes"),
 				this.project_web_resources.getAbsolutePath());
-		
+		log.info("copy "+new File(project_web_webrootpath, "WEB-INF/classes").getAbsolutePath() + " to "+this.project_service_server_resources.getAbsolutePath());
 		FileUtil.copy(new File(project_web_webrootpath, "WEB-INF/classes"),
 				this.project_service_server_resources.getAbsolutePath());
+		clearClasses(new File(project_web_webrootpath,"WEB-INF/classes"));
 	}
 
 	
@@ -296,14 +303,14 @@ public class GenGradleService  extends BaseGen{
 		
 		File weblib = new File(project_web_webrootpath,"WEB-INF/lib");
 		clearJars( weblib);
-		clearClasses(new File(project_web_webrootpath,"WEB-INF/classes"));
+		
 		FileUtil.unzip(war,project_service_server_webrootpath.getAbsolutePath());
 		weblib = new File(project_service_server_webrootpath,"WEB-INF/lib");
 		
 		clearJars( weblib);
 		clearClasses(new File(project_service_server_webrootpath,"WEB-INF/classes"));
 		clearResourcesOfServiceServer();
-		FileUtil.fileCopy(new File("resources/templates/gradle/build/project-service-server/web.xml"), new File(project_service_server_webrootpath,"WEB-INF/web.xml"));
+		FileUtil.fileCopy(new File("resources/templates/"+projecttype+"/build/project-service-server/web.xml"), new File(project_service_server_webrootpath,"WEB-INF/web.xml"));
 		FileUtil.unzip(this.db_init_tool,
 				this.projectdbinitpath.getAbsolutePath());
 	}
@@ -398,6 +405,8 @@ public class GenGradleService  extends BaseGen{
 		context.put("uploadArchivesToMavenCenter",uploadArchivesToMavenCenter);
 		
 		context.put("Implementation_Vendor",Implementation_Vendor);
+		context.put("SECURITY_PROJ_VERSION",SECURITY_PROJ_VERSION);
+		
 	}
 	
 	private void setGradelbuildContext(VelocityContext context)
@@ -418,7 +427,7 @@ public class GenGradleService  extends BaseGen{
 		try {
 			// 生成ant构建属性文件
 			Template gradleproperties = VelocityUtil
-					.getTemplate("gradle/build/gradle.properties");
+					.getTemplate(projecttype+"/build/gradle.properties");
 			VelocityContext context = new VelocityContext();// VelocityUtil.buildVelocityContext(context)
 			setGradelpropertiesContext( context);
 			out = new FileOutputStream(new File(this.projectpath,
@@ -431,7 +440,7 @@ public class GenGradleService  extends BaseGen{
 			writer.close();
 			
 			Template gradlebuild = VelocityUtil
-					.getTemplate("gradle/build/build.gradle");
+					.getTemplate(projecttype+"/build/build.gradle");
 			context = new VelocityContext();// VelocityUtil.buildVelocityContext(context)
 			setGradelbuildContext(  context);
 			out = new FileOutputStream(new File(this.projectpath,
@@ -445,7 +454,7 @@ public class GenGradleService  extends BaseGen{
 			
 
 			Template gradlesetting = VelocityUtil
-					.getTemplate("gradle/build/settings.gradle");
+					.getTemplate(projecttype+"/build/settings.gradle");
 			context = new VelocityContext();// VelocityUtil.buildVelocityContext(context)
 			setGradelbuildContext(  context);
 			out = new FileOutputStream(new File(this.projectpath,
@@ -479,7 +488,7 @@ public class GenGradleService  extends BaseGen{
 	}
 	
 	private void genantCommonModuleProjectBuildfile() {
-		genModuleProjectBuildfile("gradle/build/project-common/build.gradle",project_common ) ;
+		genModuleProjectBuildfile(projecttype+"/build/project-common/build.gradle",project_common ) ;
 		
 	}
 	
@@ -519,21 +528,21 @@ public class GenGradleService  extends BaseGen{
 		}
 	}
 	private void genantAPIModuleProjectBuildfile() {
-		genModuleProjectBuildfile("gradle/build/project-api/build.gradle",project_service_interface );
+		genModuleProjectBuildfile(projecttype+"/build/project-api/build.gradle",project_service_interface );
 		
 	}
 	
 	private void genantServiceServerModuleProjectBuildfile() {
-		genModuleProjectBuildfile("gradle/build/project-service-server/build.gradle",this.project_service_server );
+		genModuleProjectBuildfile(projecttype+"/build/project-service-server/build.gradle",this.project_service_server );
 		
 	}
 	
 	private void genantServiceModuleProjectBuildfile() {
-		genModuleProjectBuildfile("gradle/build/project-service/build.gradle",this.project_service_impl );
+		genModuleProjectBuildfile(projecttype+"/build/project-service/build.gradle",this.project_service_impl );
 		
 	}
 	private void genantWebModuleProjectBuildfile() {
-		genModuleProjectBuildfile("gradle/build/project-web/build.gradle",this.project_web);
+		genModuleProjectBuildfile(projecttype+"/build/project-web/build.gradle",this.project_web);
 		
 	}
 	private void genGradleBuildFiles()

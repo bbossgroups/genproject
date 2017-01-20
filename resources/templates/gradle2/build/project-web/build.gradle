@@ -1,3 +1,4 @@
+apply plugin: "war"
 sourceSets {
     main {
         java {
@@ -24,16 +25,14 @@ sourceSets {
     
 }
 
-
+ 
 dependencies {
-		compile project(':${projectname}-api')
-     
-   
+   compile project(':${projectname}-service')
+     compile 'io.jsonwebtoken:jjwt:0.7.0' 
+      compile (
+		  [group: 'mysql', name: 'mysql-connector-java', version: '5.1.39', transitive: false],
+		   fileTree(dir: '../lib', include: '**/*.jar'),    
+		)
     
-    compile ( 
-        
-	         fileTree(dir: '../lib', include: '**/*.jar'),
-	    )
-    
-     
 }
+webAppDirName = 'src/main/webapp'  

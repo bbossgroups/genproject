@@ -25,12 +25,10 @@ sourceSets {
     
 }
 
-project.tasks.compileJava.dependsOn(project(':${projectname}-service').tasks.install)
+ 
 dependencies {
-   
-     compile (
-              [group: '${PROJ_GROUP}', name: '${projectname}-api', version: "${PROJ_VERSION}", transitive: true],   
-    )
+   compile project(':${projectname}-service')
+     
     compile ( 
         
 	         fileTree(dir: '../lib', include: '**/*.jar'),
