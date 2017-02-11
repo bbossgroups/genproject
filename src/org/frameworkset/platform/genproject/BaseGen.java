@@ -41,7 +41,7 @@ public abstract class BaseGen implements Gen {
 	protected File projecttemppath;
 	
 	protected File projectlibcompilepath;
-
+	protected File projectlib;
 	
 	protected File projectdbinitpath;
 	

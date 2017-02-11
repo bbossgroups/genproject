@@ -119,9 +119,12 @@ public class GenGradleService  extends BaseGen{
 		project_service_impl = new File(projectpath, projectname+"-service");
 		project_web = new File(projectpath, projectname+"-web");
 		project_service_server = new File(projectpath, projectname+"-service-server");
-		projectlibcompilepath = new File(projectpath, "lib");
+		projectlibcompilepath = new File(projectpath, "lib-compile");
 		if (!projectlibcompilepath.exists())
 			projectlibcompilepath.mkdirs();
+		projectlib = new File(projectpath, "lib");
+		if (!projectlib.exists())
+			projectlib.mkdirs();
 		makeProjectStruct(project_common);
 		makeProjectStruct(project_service_interface);
 		makeProjectStruct(project_service_impl);
@@ -224,8 +227,27 @@ public class GenGradleService  extends BaseGen{
 		});
 		for(int i = 0; i < compilejars.length; i ++)
 		{
-			FileUtil.fileCopy(compilejars[i], new File(this.projectlibcompilepath, compilejars[i].getName()));
+			FileUtil.fileCopy(compilejars[i], new File(this.projectlib, compilejars[i].getName()));
 			
+		}
+
+		compilejars = new File("resources/templates/"+projecttype+"/lib-compile/").listFiles(new FilenameFilter(){
+
+			@Override
+			public boolean accept(File dir, String name) {
+				// TODO Auto-generated method stub
+				if( name.endsWith(".jar"))
+				{
+					return true;
+				}
+				return false;
+			}
+
+		});
+		for(int i = 0; i < compilejars.length; i ++)
+		{
+			FileUtil.fileCopy(compilejars[i], new File(this.projectlibcompilepath, compilejars[i].getName()));
+
 		}
 //		ClassPathResource resource = new ClassPathResource("templates/lib-compile/javaee.jar");
 //		resource.savetofile(new File(this.projectlibcompilepath, "javaee.jar"));
