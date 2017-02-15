@@ -70,7 +70,9 @@ configure(allprojects) { project ->
 
 	repositories {
 		mavenLocal()
-		
+		maven {
+	        url "http://maven.aliyun.com/nexus/content/groups/public"
+	    }
 		maven {
 	        url "${proxysonatype_repository_url}"
 	    }

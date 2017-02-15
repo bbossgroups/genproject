@@ -337,6 +337,8 @@ public abstract class BaseGen implements Gen {
 			// 生成ant构建属性文件
 			Template antbuild = VelocityUtil.getTemplate(startuppath);
 			VelocityContext context = new VelocityContext();// VelocityUtil.buildVelocityContext(context)
+			String bboss_version = CommonLauncher.getProperty("bboss_version", "5.0.1");
+			context.put("bboss_version", bboss_version);
 			if (CommonLauncher.isWindows())
 			{
 //				${dbinitdisk}
@@ -436,11 +438,12 @@ public abstract class BaseGen implements Gen {
 				if (CommonLauncher.isWindows()) {
 //					${dbinitpath}
 					recoverdbinitpath("dbinit/startup.bat","startup.bat");
-					
+					recoverdbinitpath("dbinit/startup.bat","startup.sh");
 				
 				} else
 				{
 					recoverdbinitpath("dbinit/startup.sh","startup.sh");
+					recoverdbinitpath("dbinit/startup.bat","startup.bat");
 					
 				}
 			}
