@@ -48,7 +48,13 @@ dependencies {
           [group: 'com.bbossgroups', name: 'bboss-hession', version: "${bboss_version}", transitive: true],
            [group: 'commons-fileupload', name: 'commons-fileupload', version: '1.3.1', transitive: false],
            
-             
+             [group: 'com.bbossgroups.activiti', name: 'activiti-bpmn-converter', version: "${WF_VERSION}", transitive: false],
+            [group: 'com.bbossgroups.activiti', name: 'activiti-bpmn-layout', version: "${WF_VERSION}", transitive: false],
+            [group: 'com.bbossgroups.activiti', name: 'activiti-bpmn-model', version: "${WF_VERSION}", transitive: false],
+            [group: 'com.bbossgroups.activiti', name: 'activiti-engine', version: "${WF_VERSION}", transitive: false],
+            [group: 'com.belerweb', name: 'pinyin4j', version: "2.5.1", transitive: false],
+            
+            
               [group: 'org.ow2.asm', name: 'asm', version: '5.0.3', transitive: false],
                [group: 'cglib', name: 'cglib-nodep', version: '3.1', transitive: false],
               [group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: "${jacksonversion}",transitive: false],
@@ -56,6 +62,15 @@ dependencies {
             [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: "${jacksonversion}",transitive: false],
             [group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: "${jacksonversion}",transitive: false],
               [group: 'com.github.penggle', name: 'kaptcha', version: '2.3.2',transitive: false],
+              
+              [group: 'commons-io', name: 'commons-io', version: '2.0', transitive: false],
+            [group: 'commons-beanutils', name: 'commons-beanutils', version: '1.8.0', transitive: false],
+             [group: 'org.apache.poi', name: 'poi', version: '3.10-FINAL', transitive: false],
+            [group: 'org.apache.poi', name: 'poi-excelant', version: '3.10-FINAL', transitive: false],
+            [group: 'org.apache.poi', name: 'poi-ooxml', version: '3.10-FINAL', transitive: false],
+            [group: 'org.apache.poi', name: 'poi-ooxml-schemas', version: '3.10-FINAL', transitive: false],
+            [group: 'org.apache.poi', name: 'poi-scratchpad', version: '3.10-FINAL', transitive: false],
+           
     )
    
      testCompile (            
