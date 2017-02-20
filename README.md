@@ -8,9 +8,11 @@ gradle releaseRuntimeZip
 
 # 搭建开发环境
 
-先从github下载工程，然后通过开发工具（eclipse,idea）的gradle插件将genproject导入开发工具即可（eclipse,idea）
-
+下载工程源码，然后通过开发工具（eclipse,idea）的gradle插件将genproject导入开发工具即可（eclipse,idea）
+github
 https://github.com/bbossgroups/genproject
 
+oschina
+https://git.oschina.net/bboss/genproject
 # genproject document:
 http://yin-bp.iteye.com/blog/2230399 
