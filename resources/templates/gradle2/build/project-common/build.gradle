@@ -29,6 +29,7 @@ dependencies {
     		 [group: 'com.bbossgroups.pdp', name: 'bboss-pdp-auth', version: "${bboss_pdp_version}", transitive: false],
             [group: 'com.bbossgroups.pdp', name: 'bboss-pdp-dict', version: "${bboss_pdp_version}", transitive: false],
              [group: 'com.bbossgroups.pdp', name: 'bboss-pdp-adminservice', version: "${bboss_pdp_version}", transitive: false],
+             [group: 'com.bbossgroups.pdp', name: 'bboss-pdp-fastwx', version: "${bboss_pdp_version}", transitive: false],
             
             [group: 'log4j', name: 'log4j', version: '1.2.16', transitive: false],            
             [group: 'com.bbossgroups', name: 'bboss-util', version: "${bboss_version}", transitive: false],
@@ -70,7 +71,93 @@ dependencies {
             [group: 'org.apache.poi', name: 'poi-ooxml', version: '3.10-FINAL', transitive: false],
             [group: 'org.apache.poi', name: 'poi-ooxml-schemas', version: '3.10-FINAL', transitive: false],
             [group: 'org.apache.poi', name: 'poi-scratchpad', version: '3.10-FINAL', transitive: false],
+            
+             //add on 20170223 begin
+          [group: 'com.bbossgroups', name: 'bboss-http', version: "${bboss_version}", transitive: true],
+            
+               [group: 'com.bbossgroups.rpc', name: 'bboss-rpc', version: "${bbossrpc_version}", transitive: false],
+            
+              
+         	[group: 'org.apache.cxf', name: 'cxf-rt-bindings-soap', version: '3.1.0', transitive: false],
+            [group: 'org.apache.cxf', name: 'cxf-rt-databinding-jaxb', version: '3.1.0', transitive: false],
+            [group: 'org.apache.cxf', name: 'cxf-rt-frontend-jaxws', version: '3.1.0', transitive: false],
+            [group: 'org.apache.cxf', name: 'cxf-rt-frontend-simple', version: '3.1.0', transitive: false],
+            [group: 'org.apache.cxf', name: 'cxf-rt-transports-http', version: '3.1.0', transitive: false],
+            [group: 'org.apache.cxf', name: 'cxf-rt-wsdl', version: '3.1.0', transitive: false],
+            
+             
+            
+            [group: 'org.apache.geronimo.specs', name: 'geronimo-jaxws_2.2_spec', version: '1.1', transitive: false],
+            [group: 'org.apache.geronimo.specs', name: 'geronimo-jms_1.1_spec', version: '1.1.1', transitive: false],
+            [group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0-m10', transitive: false],
+            [group: 'javax.xml.bind', name: 'jaxb-api', version: '2.2.12', transitive: false],
+            
+            [group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.2.11', transitive: false],
+            [group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.2.11', transitive: false],
+            [group: 'com.sun.xml.bind', name: 'jaxb-xjc', version: '2.2.11', transitive: false],
+            
+            
+            [group: 'org.apache.neethi', name: 'neethi', version: '3.0.3', transitive: false],
+            [group: 'org.codehaus.woodstox', name: 'stax2-api', version: '3.1.1', transitive: false],
+            [group: 'org.codehaus.woodstox', name: 'woodstox-core-asl', version: '4.2.0', transitive: false],
+            [group: 'wsdl4j', name: 'wsdl4j', version: '1.6.3', transitive: false],
+            [group: 'xml-resolver', name: 'xml-resolver', version: '1.2', transitive: false],
+            [group: 'org.apache.ws.xmlschema', name: 'xmlschema-core', version: '2.2.1', transitive: false],
+            [group: 'dom4j', name: 'dom4j', version: "1.6.1", transitive: false],
+    		[group: 'antlr', name: 'antlr', version: '2.7.7', transitive: false],
+     		[group: 'org.apache.geronimo.specs', name: 'geronimo-activation_1.1_spec', version: '1.1', transitive: false],
+            [group: 'org.apache.geronimo.specs', name: 'geronimo-annotation_1.0_spec', version: '1.1.1', transitive: false],
+            
+            [group: 'org.mybatis', name: 'mybatis', version: '3.0.6', transitive: false],
+            
+            [group: 'xpp3', name: 'xpp3', version: '1.1.4c', transitive: false],
+            [group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.3.1', transitive: false],
+          
+          
+           [group: 'xmlpull', name: 'xmlpull', version: '1.1.3.4d_b4_min', transitive: false],
+            [group: 'xalan', name: 'xalan', version: '2.7.2', transitive: false],
+            [group: 'org.openoffice', name: 'unoil', version: '4.1.2', transitive: true],
+            [group: 'org.openoffice', name: 'juh', version: '4.1.2', transitive: false],
+            [group: 'org.openoffice', name: 'bootstrap-connector', version: '0.1.1', transitive: false],
+             [group: 'org.openoffice', name: 'jurt', version: '4.1.2', transitive: false],
+            [group: 'trove', name: 'trove', version: '1.0.2', transitive: false],
+            [group: 'com.trilead', name: 'trilead-ssh2', version: '1.0.0-build215', transitive: false],
+            [group: 'org.slf4j', name: 'slf4j-api', version: '1.7.2', transitive: false],
+           	[group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.2', transitive: false],
+            [group: 'swarmcache', name: 'swarmcache', version: '1.0RC2', transitive: false],
+            [group: 'org.jfree', name: 'swtgraphics2d', version: '1.0', transitive: false],
+            [group: 'org.openoffice', name: 'ridl', version: '4.1.2', transitive: false],
+            [group: 'com.thoughtworks.qdox', name: 'qdox', version: '2.0-M4', transitive: false],
+             [group: 'javax.resource', name: 'connector-api', version: '1.6-alpha-1', transitive: false],
+			[group: 'backport-util-concurrent', name: 'backport-util-concurrent', version: '3.1', transitive: false],
+			[group: 'batik', name: 'batik-awt-util', version: '1.6-1', transitive: false],
+			[group: 'batik', name: 'batik-dom', version: '1.6-1', transitive: false],
+			[group: 'batik', name: 'batik-svggen', version: '1.6-1', transitive: false],
+			[group: 'batik', name: 'batik-util', version: '1.6-1', transitive: false],
+ 			[group: 'com.alibaba', name: 'druid', version: '1.0.11', transitive: false],
+           	[group: 'exml', name: 'exml', version: '7.0', transitive: false],
+           	[group: 'org.fontbox', name: 'fontbox', version: '0.1.0', transitive: false],
+            [group: 'com.lowagie', name: 'itext', version: '4.2.1', transitive: false],
+//			[group: 'com.itextpdf', name: 'itext-asian', version: '5.2.0', transitive: false],
+             [group: 'net.sf.jacob-project', name: 'jacob', version: '1.14.3', transitive: false],
+           	[group: 'javassist', name: 'javassist', version: "3.12.0.GA", transitive: false],            
+           	[group: 'jaxen', name: 'jaxen', version: '1.1.1', transitive: false],
+            [group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.2', transitive: false],
+            [group: 'jfree', name: 'jcommon', version: '1.0.16', transitive: false],
+          	[group: 'com.sleepycat', name: 'je', version: '5.0.73', transitive: false],
+            [group: 'org.tinyjee.jgraphx', name: 'jgraphx', version: "1.10.4.1", transitive: false],
+           	[group: 'jgraph', name: 'jgraph', version: '5.13.0.0', transitive: false],
+          	[group: 'org.jgroups', name: 'jgroups', version: '3.6.1.Final', transitive: false],
+			[group: 'com.sun.woodstock.dependlibs', name: 'jh', version: '2.0', transitive: false],
+            [group: 'com.jcraft', name: 'jsch', version: '0.1.38', transitive: false],
            
+            [group: 'net.sourceforge.jexcelapi', name: 'jxl', version: '2.6.12', transitive: false],
+          	[group: 'org.livetribe', name: 'livetribe-jsr223', version: '2.0.6', transitive: false],
+            [group: 'odmg', name: 'odmg', version: '3.0', transitive: false],
+            [group: 'com.alibaba', name: 'fastjson', version: "1.2.24", transitive: true],
+           
+            //add on 20170223 end
+             
     )
    
      testCompile (            
