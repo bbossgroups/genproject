@@ -38,6 +38,8 @@ dependencies {
             [group: 'com.bbossgroups', name: 'bboss-taglib', version: "${bboss_version}", transitive: false],
             [group: 'com.bbossgroups', name: 'bboss-data', version: "${bboss_version}", transitive: true],
            [group: 'com.bbossgroups', name: 'bboss-mvc', version: "${bboss_version}", transitive: false],
+            [group: 'com.bbossgroups', name: 'bboss-schedule', version: "${bboss_version}", transitive: true],
+        
              [group: 'com.bbossgroups', name: 'bboss-event', version: "${bboss_version}", transitive: false],
              [group: 'com.bbossgroups', name: 'bboss-velocity', version: "${bboss_version}", transitive: false],
              [group: 'com.bbossgroups.security', name: 'bboss-security', version: "${SECURITY_PROJ_VERSION}", transitive: false],
