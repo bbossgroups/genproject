@@ -30,7 +30,10 @@ dependencies {
             [group: 'com.bbossgroups.pdp', name: 'bboss-pdp-dict', version: "${bboss_pdp_version}", transitive: false],
              [group: 'com.bbossgroups.pdp', name: 'bboss-pdp-adminservice', version: "${bboss_pdp_version}", transitive: false],
              [group: 'com.bbossgroups.pdp', name: 'bboss-pdp-fastwx', version: "${bboss_pdp_version}", transitive: false],
-            
+            [group: 'com.bbossgroups.pdp', name: 'bboss-pdp-dubbo', version: "${bboss_pdp_version}", transitive: false],
+             [group: 'com.bbossgroups.pdp', name: 'bboss-pdp-dubbo-inf', version: "${bboss_pdp_version}", transitive: false],
+              [group: 'com.bbossgroups.plugins', name: 'bboss-plugin-dubbo', version: "${bbossplugin_version}", transitive: true],
+      
             [group: 'log4j', name: 'log4j', version: '1.2.16', transitive: false],            
             [group: 'com.bbossgroups', name: 'bboss-util', version: "${bboss_version}", transitive: false],
             [group: 'com.bbossgroups', name: 'bboss-core', version: "${bboss_version}", transitive: false],
