@@ -45,6 +45,7 @@ public class GenGradleService  extends BaseGen{
 	protected String bboss_version="5.0.1";
 	protected String bboss_pdp_version="4.10.9";
 	protected String bboss_wordpdf_version="4.10.9";
+	protected String bbossplugin_version="4.10.9";
 	protected String WF_VERSION="5.12";
 	protected String mongodbversion="3.2.2";
 	protected String bboss_rpc_version="4.10.9";
@@ -84,6 +85,7 @@ public class GenGradleService  extends BaseGen{
 		bboss_version = CommonLauncher.getProperty("bboss_version","5.0.2.4");
 		bboss_pdp_version = CommonLauncher.getProperty("bboss_pdp_version","5.0.1");
 		bboss_wordpdf_version = CommonLauncher.getProperty("bboss_wordpdf_version","4.10.9");
+		bbossplugin_version =  CommonLauncher.getProperty("bbossplugin_version","4.10.9");
 		WF_VERSION = CommonLauncher.getProperty("WF_VERSION","5.12.1");
 		mongodbversion = CommonLauncher.getProperty("mongodbversion","3.2.2");
 		bboss_rpc_version = CommonLauncher.getProperty("bboss_rpc_version","4.10.9");
@@ -403,6 +405,7 @@ public class GenGradleService  extends BaseGen{
 		context.put("bboss_version",bboss_version);
 		context.put("bboss_pdp_version",bboss_pdp_version);
 		context.put("bboss_wordpdf_version",bboss_wordpdf_version);
+		context.put("bbossplugin_version",bbossplugin_version);		
 		context.put("WF_VERSION",WF_VERSION);
 		context.put("mongodbversion",mongodbversion);
 		context.put("bboss_rpc_version",bboss_rpc_version);
