@@ -1,3 +1,4 @@
+ 
 sourceSets {
     main {
         java {
@@ -12,12 +13,12 @@ sourceSets {
     }
     test {
         java {
-            srcDir 'test/main/java'
+            srcDir 'src/test/java'
            
         }
         resources {
-			srcDirs 'test/main/resources'
-			srcDir 'test/main/java'  exclude '**/*.java'
+			srcDirs 'src/test/resources'
+			srcDir 'src/test/java'  exclude '**/*.java'
         }
         
     }
@@ -31,9 +32,7 @@ dependencies {
              [group: 'com.bbossgroups.pdp', name: 'bboss-pdp-adminservice', version: "${bboss_pdp_version}", transitive: false],
              [group: 'com.bbossgroups.pdp', name: 'bboss-pdp-fastwx', version: "${bboss_pdp_version}", transitive: false],
             [group: 'com.bbossgroups.pdp', name: 'bboss-pdp-dubbo', version: "${bboss_pdp_version}", transitive: false],
-             [group: 'com.bbossgroups.pdp', name: 'bboss-pdp-dubbo-inf', version: "${bboss_pdp_version}", transitive: false],
-              [group: 'com.bbossgroups.plugins', name: 'bboss-plugin-dubbo', version: "${bbossplugin_version}", transitive: true],
-      
+         
             [group: 'log4j', name: 'log4j', version: '1.2.16', transitive: false],            
             [group: 'com.bbossgroups', name: 'bboss-util', version: "${bboss_version}", transitive: false],
             [group: 'com.bbossgroups', name: 'bboss-core', version: "${bboss_version}", transitive: false],
@@ -162,6 +161,7 @@ dependencies {
             [group: 'com.alibaba', name: 'fastjson', version: "1.2.24", transitive: true],
            
             //add on 20170223 end
+            [group: 'net.sourceforge.jtds', name: 'jtds', version: '1.3.1', transitive: false],
              
     )
    

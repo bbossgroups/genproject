@@ -1,0 +1,17 @@
+ 
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+           
+        }
+        resources {
+			srcDirs 'src/main/resources'
+			srcDir 'src/main/java'  exclude '**/*.java'
+        }
+        
+    }
+    
+    
+}
+ 

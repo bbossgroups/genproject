@@ -1,4 +1,5 @@
 apply plugin: "war"
+ 
 sourceSets {
     main {
         java {
@@ -13,12 +14,12 @@ sourceSets {
     }
     test {
         java {
-            srcDir 'test/main/java'
+            srcDir 'src/test/java'
            
         }
         resources {
-			srcDirs 'test/main/resources'
-			srcDir 'test/main/java'  exclude '**/*.java'
+			srcDirs 'src/test/resources'
+			srcDir 'src/test/java'  exclude '**/*.java'
         }
         
     }

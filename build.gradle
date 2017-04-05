@@ -131,6 +131,11 @@ task copyResourceFiles(type: Copy ){
 	into 'build/dist/genproject/resources'
 }
 
+task copyDemoFiles(type: Copy ){ 
+	from fileTree(dir: 'demo')
+	into 'build/dist/genproject/demo'
+}
+
  
 task copyToolFiles(type: Copy ){
 	 
@@ -145,7 +150,7 @@ task copyToolFiles(type: Copy ){
 	 
 }
 project.tasks.copyLibFiles.dependsOn(project.tasks.install) 
-task releaseRuntimeZip(type: Zip,dependsOn:['copyToolFiles','copyResourceFiles','copyLibFiles']) {
+task releaseRuntimeZip(type: Zip,dependsOn:['copyToolFiles','copyResourceFiles','copyLibFiles','copyDemoFiles']) {
     //appendix = 'wrapper'
    baseName='genproject'
    from 'build/dist/genproject'

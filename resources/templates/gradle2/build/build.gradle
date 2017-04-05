@@ -88,7 +88,7 @@ configure(allprojects) { project ->
 }
 
  
-configure(subprojects - [project(":${projectname}-service-server"),project(":${projectname}-web")]) { subproject ->
+configure(subprojects - [project(":${projectname}-service-server"),project(":${projectname}-web")#if($enabledubbo.equals("true")),project(":${projectname}-dubbo"),project(":${projectname}-dubbo-inf")#end]) { subproject ->
 	task sourcesJar(type: Jar) {
 		classifier = "sources"	
 		from sourceSets.main.allJava

@@ -1,3 +1,4 @@
+ 
 sourceSets {
     main {
         java {
@@ -12,12 +13,12 @@ sourceSets {
     }
     test {
         java {
-            srcDir 'test/main/java'
+            srcDir 'src/test/java'
            
         }
         resources {
-			srcDirs 'test/main/resources'
-			srcDir 'test/main/java'  exclude '**/*.java'
+			srcDirs 'src/test/resources'
+			srcDir 'src/test/java'  exclude '**/*.java'
         }
         
     }
@@ -26,9 +27,10 @@ sourceSets {
 
 
 dependencies {
-		compile project(':${projectname}-api')
-     
-   
+	 compile project(':${projectname}-api')
+	 #if($enabledubbo.equals("true"))
+     compile project(':${projectname}-dubbo-inf')
+     #end
     
     compile ( 
         

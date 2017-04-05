@@ -3,3 +3,8 @@ include '${projectname}-web'
 include '${projectname}-service'
 include '${projectname}-api'
 include '${projectname}-service-server'
+#if($enabledubbo.equals("true"))
+include '${projectname}-dubbo'
+include '${projectname}-dubbo-inf'
+#end
+

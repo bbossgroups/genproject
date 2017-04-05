@@ -27,6 +27,8 @@ public class GenGradleService  extends BaseGen{
 	protected File project_common; 
 	protected File project_service_interface;	
 	protected File project_service_impl;
+	protected File project_dubbo_interface;	
+	protected File project_dubbo;
 	protected File project_web;
 	protected File project_web_webrootpath;
 	protected File project_web_resources;
@@ -49,6 +51,13 @@ public class GenGradleService  extends BaseGen{
 	protected String WF_VERSION="5.12";
 	protected String mongodbversion="3.2.2";
 	protected String bboss_rpc_version="4.10.9";
+	
+	protected String enabledubbo="false";
+	protected String enablepinpoint="false";
+	protected String AGENT_VERSION="1.6.0";
+	protected String AGENT_ID="dubbo160_1";
+	protected String APPLICATION_NAME="dubbo-app1";
+	protected String AGENT_PATH="d:/pinpoint/pinpoint-agent-1.6.0";
 
 	protected String skipTest="true";
 	protected String PROJ_WEBSITEURL="http://www.bbossgroups.com";
@@ -89,6 +98,13 @@ public class GenGradleService  extends BaseGen{
 		WF_VERSION = CommonLauncher.getProperty("WF_VERSION","5.12.1");
 		mongodbversion = CommonLauncher.getProperty("mongodbversion","3.2.2");
 		bboss_rpc_version = CommonLauncher.getProperty("bboss_rpc_version","4.10.9");
+		
+		enabledubbo = CommonLauncher.getProperty("enabledubbo","false");
+		enablepinpoint = CommonLauncher.getProperty("enablepinpoint","false");
+		AGENT_VERSION = CommonLauncher.getProperty("AGENT_VERSION");
+		AGENT_ID = CommonLauncher.getProperty("AGENT_ID");
+		APPLICATION_NAME = CommonLauncher.getProperty("APPLICATION_NAME");
+		AGENT_PATH = CommonLauncher.getProperty("AGENT_PATH");
 
 		skipTest = CommonLauncher.getProperty("skipTest","true");
 		PROJ_WEBSITEURL = CommonLauncher.getProperty("PROJ_WEBSITEURL","http://www.bbossgroups.com");
@@ -119,6 +135,8 @@ public class GenGradleService  extends BaseGen{
 		project_common = new File(projectpath, projectname+"-common");
 		project_service_interface = new File(projectpath, projectname+"-api");	
 		project_service_impl = new File(projectpath, projectname+"-service");
+		project_dubbo_interface = new File(projectpath, projectname+"-dubbo-inf");	
+		project_dubbo = new File(projectpath, projectname+"-dubbo");
 		project_web = new File(projectpath, projectname+"-web");
 		project_service_server = new File(projectpath, projectname+"-service-server");
 		projectlibcompilepath = new File(projectpath, "lib-compile");
@@ -129,6 +147,10 @@ public class GenGradleService  extends BaseGen{
 			projectlib.mkdirs();
 		makeProjectStruct(project_common);
 		makeProjectStruct(project_service_interface);
+		if(this.enabledubbo.equals("true")){
+			makeProjectStruct(project_dubbo_interface);			
+			makeDubboProjectStruct(project_dubbo);
+		}
 		makeProjectStruct(project_service_impl);
 		makeWebProjectStruct(project_web);
 		makeServiceServerProjectStruct(project_service_server);
@@ -136,6 +158,26 @@ public class GenGradleService  extends BaseGen{
 
 	}
 	
+	private void copyDubboFiles() throws Exception {
+		log.info("copy "+new File("resources/templates/gradle2/build/project-dubbo/").getAbsolutePath() + " to "+project_dubbo.getAbsolutePath());
+		
+		FileUtil.copy(new File("resources/templates/gradle2/build/project-dubbo/"),
+				project_dubbo.getAbsolutePath());
+		log.info("copy "+new File("resources/templates/gradle2/build/project-dubbo-inf/").getAbsolutePath() + " to "+project_dubbo_interface.getAbsolutePath());
+		
+		FileUtil.copy(new File("resources/templates/gradle2/build/project-dubbo-inf/"),
+				project_dubbo_interface.getAbsolutePath());
+		
+		
+		log.info("copy "+new File("demo/project-dubbo/").getAbsolutePath() + " to "+project_dubbo.getAbsolutePath());
+		
+		FileUtil.copy(new File("demo/project-dubbo/"),
+				project_dubbo.getAbsolutePath());
+		log.info("copy "+new File("demo/project-dubbo-inf/").getAbsolutePath() + " to "+project_dubbo_interface.getAbsolutePath());
+		
+		FileUtil.copy(new File("demo/project-dubbo-inf/"),
+				project_dubbo_interface.getAbsolutePath());
+	}
 	private void makeProjectStruct(File moduleProject)
 	{
 		if (!moduleProject.exists())
@@ -145,9 +187,29 @@ public class GenGradleService  extends BaseGen{
 		dir = new File(moduleProject,"src/main/resources");
 		dir.mkdirs();
 		
-		dir = new File(moduleProject,"test/main/java");
+		dir = new File(moduleProject,"src/test/java");
 		dir.mkdirs();
-		dir = new File(moduleProject,"test/main/resources");
+		dir = new File(moduleProject,"src/test/resources");
+		dir.mkdirs();
+		
+				
+	}
+	
+	private void makeDubboProjectStruct(File moduleProject)
+	{
+		if (!moduleProject.exists())
+			moduleProject.mkdirs();
+		File dir = new File(moduleProject,"src/main/java");
+		dir.mkdirs();
+		dir = new File(moduleProject,"src/main/resources");
+		dir.mkdirs();
+		
+		dir = new File(moduleProject,"src/test/java");
+		dir.mkdirs();
+		dir = new File(moduleProject,"src/test/resources");
+		dir.mkdirs();
+		
+		dir = new File(moduleProject,"runfiles");
 		dir.mkdirs();
 		
 				
@@ -168,9 +230,9 @@ public class GenGradleService  extends BaseGen{
 		project_web_webrootpath = dir;
 		
 		
-		dir = new File(moduleProject,"test/main/java");
+		dir = new File(moduleProject,"src/test/java");
 		dir.mkdirs();
-		dir = new File(moduleProject,"test/main/resources");
+		dir = new File(moduleProject,"src/test/resources");
 		dir.mkdirs();
 				
 	}
@@ -190,9 +252,9 @@ public class GenGradleService  extends BaseGen{
 		project_service_server_webrootpath = dir;
 		
 		
-		dir = new File(moduleProject,"test/main/java");
+		dir = new File(moduleProject,"src/test/java");
 		dir.mkdirs();
-		dir = new File(moduleProject,"test/main/resources");
+		dir = new File(moduleProject,"src/test/resources");
 		dir.mkdirs();
 				
 	}
@@ -279,6 +341,21 @@ public class GenGradleService  extends BaseGen{
 				f.delete();
 		}
 	}
+	
+	private void clearDubbofiles(File dubboconf)
+	{
+		File[] files = dubboconf.listFiles();
+		for(int i = 0; files != null && i < files.length; i ++)
+		{
+			File f = files[i];
+			if(f.isFile() && f.getName().startsWith("dubbo-"))
+				f.delete();
+			if(f.isDirectory()){
+				clearDubbofiles(f);
+			}
+			
+		}
+	}
 	private void clearClasses(File classdir)
 	{
 		FileUtil.deleteFile(classdir);
@@ -327,6 +404,8 @@ public class GenGradleService  extends BaseGen{
 		
 		File weblib = new File(project_web_webrootpath,"WEB-INF/lib");
 		clearJars( weblib);
+		if(!this.enabledubbo.equals("true"))
+			clearDubbofiles(new File(project_web_webrootpath,"WEB-INF/conf"));
 		
 		FileUtil.unzip(war,project_service_server_webrootpath.getAbsolutePath());
 		weblib = new File(project_service_server_webrootpath,"WEB-INF/lib");
@@ -334,6 +413,8 @@ public class GenGradleService  extends BaseGen{
 		clearJars( weblib);
 		clearClasses(new File(project_service_server_webrootpath,"WEB-INF/classes"));
 		clearResourcesOfServiceServer();
+		if(!this.enabledubbo.equals("true"))
+			clearDubbofiles(new File(project_service_server_webrootpath,"WEB-INF/conf"));
 		FileUtil.fileCopy(new File("resources/templates/"+projecttype+"/build/project-service-server/web.xml"), new File(project_service_server_webrootpath,"WEB-INF/web.xml"));
 		FileUtil.unzip(this.db_init_tool,
 				this.projectdbinitpath.getAbsolutePath());
@@ -409,6 +490,14 @@ public class GenGradleService  extends BaseGen{
 		context.put("WF_VERSION",WF_VERSION);
 		context.put("mongodbversion",mongodbversion);
 		context.put("bboss_rpc_version",bboss_rpc_version);
+
+		
+		context.put("enabledubbo",enabledubbo);
+		context.put("enablepinpoint",enablepinpoint);
+		context.put("AGENT_VERSION",AGENT_VERSION);
+		context.put("AGENT_ID",AGENT_ID);
+		context.put("APPLICATION_NAME",APPLICATION_NAME);
+		context.put("AGENT_PATH",AGENT_PATH);
 		
 		context.put("skipTest",skipTest);
 		context.put("PROJ_WEBSITEURL",PROJ_WEBSITEURL);
@@ -436,12 +525,24 @@ public class GenGradleService  extends BaseGen{
 	
 	private void setGradelbuildContext(VelocityContext context)
 	{
+		context.put("enabledubbo",enabledubbo);
+		context.put("enablepinpoint",enablepinpoint);
+		context.put("AGENT_VERSION",AGENT_VERSION);
+		context.put("AGENT_ID",AGENT_ID);
+		context.put("APPLICATION_NAME",APPLICATION_NAME);
+		context.put("AGENT_PATH",AGENT_PATH);
 		context.put("projectname",projectname);
 		
 	}
 	
 	private void setGradelModuleBuildContext(VelocityContext context)
 	{
+		context.put("enabledubbo",enabledubbo);
+		context.put("enablepinpoint",enablepinpoint);
+		context.put("AGENT_VERSION",AGENT_VERSION);
+		context.put("AGENT_ID",AGENT_ID);
+		context.put("APPLICATION_NAME",APPLICATION_NAME);
+		context.put("AGENT_PATH",AGENT_PATH);
 		context.put("projectname",projectname);
 		context.put("PROJ_GROUP",PROJ_GROUP);
 		
@@ -552,11 +653,122 @@ public class GenGradleService  extends BaseGen{
 				}
 		}
 	}
+	
+	private void genDubboRuntimeFiles( ) {
+		Writer writer = null;
+		OutputStream out = null;
+		String templatepath = projecttype+"/build/project-dubbo/";
+		File buildfile = this.project_dubbo;
+		try {
+			
+			// 生成ant构建属性文件
+			Template gradle = VelocityUtil
+					.getTemplate(templatepath+"runfiles/setup.sh");
+			VelocityContext context = new VelocityContext();// VelocityUtil.buildVelocityContext(context)
+			setGradelModuleBuildContext(  context);
+			out = new FileOutputStream(new File(buildfile,
+					"runfiles/setup.sh"));
+			writer = new OutputStreamWriter(out,Charsets.UTF_8);
+//			writer = new FileWriter(new File(this.projectpath,
+//					"build.properties"));
+			gradle.merge(context, writer);
+			writer.flush();
+		} catch (Exception e) {
+			log.error("生成gradle构建文件失败：",e);
+		} finally {
+			if (out != null)
+				try {
+					out.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			if (writer != null)
+				try {
+					writer.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		
+		try {
+			// 生成ant构建属性文件
+			Template gradle = VelocityUtil
+					.getTemplate(templatepath+"runfiles/setup.bat");
+			VelocityContext context = new VelocityContext();// VelocityUtil.buildVelocityContext(context)
+			setGradelModuleBuildContext(  context);
+			out = new FileOutputStream(new File(buildfile,
+					"runfiles/setup.bat"));
+			writer = new OutputStreamWriter(out,Charsets.UTF_8);
+//			writer = new FileWriter(new File(this.projectpath,
+//					"build.properties"));
+			gradle.merge(context, writer);
+			writer.flush();
+		} catch (Exception e) {
+			log.error("生成gradle构建文件失败：",e);
+		} finally {
+			if (out != null)
+				try {
+					out.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			if (writer != null)
+				try {
+					writer.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		
+		try {
+			// 生成ant构建属性文件
+			Template gradle = VelocityUtil
+					.getTemplate(templatepath+"runfiles/config.properties");
+			VelocityContext context = new VelocityContext();// VelocityUtil.buildVelocityContext(context)
+			setGradelModuleBuildContext(  context);
+			out = new FileOutputStream(new File(buildfile,
+					"runfiles/config.properties"));
+			writer = new OutputStreamWriter(out,Charsets.UTF_8);
+//			writer = new FileWriter(new File(this.projectpath,
+//					"build.properties"));
+			gradle.merge(context, writer);
+			writer.flush();
+		} catch (Exception e) {
+			log.error("生成gradle构建文件失败：",e);
+		} finally {
+			if (out != null)
+				try {
+					out.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			if (writer != null)
+				try {
+					writer.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+	}
 	private void genantAPIModuleProjectBuildfile() {
 		genModuleProjectBuildfile(projecttype+"/build/project-api/build.gradle",project_service_interface );
 		
 	}
-	
+	private void gendubboAPIModuleProjectBuildfile() {
+		genModuleProjectBuildfile(projecttype+"/build/project-dubbo-inf/build.gradle",project_dubbo_interface );
+		
+	}
+	private void gendubboModuleProjectBuildfile() {
+		genModuleProjectBuildfile(projecttype+"/build/project-dubbo/build.gradle",project_dubbo );
+		
+	} 
+	 
 	private void genantServiceServerModuleProjectBuildfile() {
 		genModuleProjectBuildfile(projecttype+"/build/project-service-server/build.gradle",this.project_service_server );
 		
@@ -578,9 +790,18 @@ public class GenGradleService  extends BaseGen{
 		genantServiceModuleProjectBuildfile() ;
 		genantServiceServerModuleProjectBuildfile();
 		genantWebModuleProjectBuildfile();
+		if(this.enabledubbo.equals("true")){
+			gendubboAPIModuleProjectBuildfile();
+			gendubboModuleProjectBuildfile();
+		}
 	}
-	private void genProject() throws IOException {
+	private void genProject() throws Exception {
+		if(this.enabledubbo.equals("true")){
+			this.copyDubboFiles();
+			genDubboRuntimeFiles();
+		}
 		genGradleBuildFiles();
+		
 		copydepenglibs();
 		gendbpoolfile();
 
