@@ -86,7 +86,7 @@ public class GenGradleService  extends BaseGen{
 		this.projecttype = projecttype;
 		// TODO Auto-generated constructor stub
 	}
-	private void initGradleProperties()
+	protected void initGradleProperties()
 	{
 		PROJ_GROUP=CommonLauncher.getProperty("PROJ_GROUP","com.wowo");
 		PROJ_VERSION=CommonLauncher.getProperty("PROJ_VERSION","1.0.0");
@@ -478,7 +478,7 @@ public class GenGradleService  extends BaseGen{
 				}
 		}
 	}
-	private void setGradelpropertiesContext(VelocityContext context)
+	protected void setGradelpropertiesContext(VelocityContext context)
 	{
 		context.put("PROJ_GROUP",PROJ_GROUP);
 		context.put("PROJ_VERSION",PROJ_VERSION);
@@ -523,7 +523,7 @@ public class GenGradleService  extends BaseGen{
 		
 	}
 	
-	private void setGradelbuildContext(VelocityContext context)
+	protected void setGradelbuildContext(VelocityContext context)
 	{
 		context.put("enabledubbo",enabledubbo);
 		context.put("enablepinpoint",enablepinpoint);
@@ -535,7 +535,7 @@ public class GenGradleService  extends BaseGen{
 		
 	}
 	
-	private void setGradelModuleBuildContext(VelocityContext context)
+	protected void setGradelModuleBuildContext(VelocityContext context)
 	{
 		context.put("enabledubbo",enabledubbo);
 		context.put("enablepinpoint",enablepinpoint);

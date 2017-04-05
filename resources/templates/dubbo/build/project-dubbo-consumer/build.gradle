@@ -6,12 +6,12 @@ sourceSets {
            
         }
         resources {
-			srcDir 'src/main/resources'
+			srcDirs 'src/main/resources'
 			srcDir 'src/main/java'  exclude '**/*.java'
         }
         
     }
-    test {
+     test {
         java {
             srcDir 'src/test/java'
            
@@ -25,17 +25,15 @@ sourceSets {
     
 }
 
-
 dependencies {
-	 compile project(':${projectname}-api')
-	 #if($enabledubbo.equals("true"))
-     compile project(':${projectname}-dubbo-inf')
-     #end
-    
-    compile ( 
-        
-	         fileTree(dir: '../lib', include: '**/*.jar'),
+		compile project(':${projectname}-dubbo-inf')
+		 compile (
+               
+	       [group: 'com.bbossgroups.plugins', name: 'bboss-plugin-dubbo', version: "${bbossplugin_version}", transitive: true],
+	         
 	    )
     
      
 }
+
+ 

@@ -18,6 +18,8 @@ public class GenProject {
 			service = new GenService();
 		else if(projecttype.equals("gradle") || projecttype.equals("gradle2"))
 			service = new GenGradleService(projecttype);
+		else  if(projecttype.equals("dubbo") )
+			service = new GenDubberGradleService(projecttype);
 		service.setApprootdir(appdir);
 		
 		service.setProjecttype(projecttype);

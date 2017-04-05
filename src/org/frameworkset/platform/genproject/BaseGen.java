@@ -474,9 +474,7 @@ public abstract class BaseGen implements Gen {
 	public void setProjecttype(String projecttype) {
 		this.projecttype = projecttype;
 	}
-	
-	protected void init() throws Exception {
-		
+	protected void _init()  throws Exception{
 		eclipseworkspace = CommonLauncher.getProperty("eclipseworkspace",
 				"D:\\testwp");// elipse工程工作目录
 		projectname = CommonLauncher.getProperty("projectname", "ptest");// 要生成的工程目录
@@ -518,6 +516,10 @@ public abstract class BaseGen implements Gen {
 //		 db_init_tool = CommonLauncher.getProperty("war","D:\\temp\\genproject\\arches\\dbinit-system-5.0.1.zip");// 要生成的工程目录
 		db_init_tool = CommonLauncher.getProperty("db_init_tool");// 要生成的工程目录
 		war = CommonLauncher.getProperty("war");// 要生成的工程目录
+	}
+	protected void init() throws Exception {
+		_init();
+		
 
 	}
 

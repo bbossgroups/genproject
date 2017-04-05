@@ -5,19 +5,19 @@ sourceSets {
            
         }
         resources {
-			srcDirs 'src/main/resources'
+			srcDir 'src/main/resources'
 			srcDir 'src/main/java'  exclude '**/*.java'
         }
         
     }
     test {
         java {
-            srcDir 'test/main/java'
+            srcDir 'src/test/java'
            
         }
         resources {
-			srcDirs 'test/main/resources'
-			srcDir 'test/main/java'  exclude '**/*.java'
+			srcDir 'src/test/resources'
+			srcDir 'src/test/java'  exclude '**/*.java'
         }
         
     }

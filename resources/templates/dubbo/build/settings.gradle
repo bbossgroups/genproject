@@ -1,0 +1,3 @@
+include '${projectname}-dubbo'
+include '${projectname}-dubbo-inf'
+include '${projectname}-dubbo-consumer'
