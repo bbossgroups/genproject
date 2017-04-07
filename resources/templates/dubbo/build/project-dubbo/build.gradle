@@ -46,7 +46,7 @@ task copyLibFiles(type: Copy ){
 	into 'build/dist/${projectname}-dubbo/lib'
 }
 task copyResourceFiles(type: Copy ){ 
-	from fileTree(dir: 'resources')
+	from fileTree(dir: 'src/test/resources')
 	into 'build/dist/${projectname}-dubbo/resources'
 }
 
