@@ -357,10 +357,10 @@ public class GenDubberGradleService extends GenGradleService {
 		try {
 
 			// 生成ant构建属性文件
-			Template gradle = VelocityUtil.getTemplate(templatepath + "runfiles/setup.sh");
+			Template gradle = VelocityUtil.getTemplate(templatepath + "runfiles/startup.sh");
 			VelocityContext context = new VelocityContext();// VelocityUtil.buildVelocityContext(context)
 			setGradelModuleBuildContext(context);
-			out = new FileOutputStream(new File(buildfile, "runfiles/setup.sh"));
+			out = new FileOutputStream(new File(buildfile, "runfiles/startup.sh"));
 			writer = new OutputStreamWriter(out, Charsets.UTF_8);
 			// writer = new FileWriter(new File(this.projectpath,
 			// "build.properties"));
@@ -387,10 +387,10 @@ public class GenDubberGradleService extends GenGradleService {
 
 		try {
 			// 生成ant构建属性文件
-			Template gradle = VelocityUtil.getTemplate(templatepath + "runfiles/setup.bat");
+			Template gradle = VelocityUtil.getTemplate(templatepath + "runfiles/startup.bat");
 			VelocityContext context = new VelocityContext();// VelocityUtil.buildVelocityContext(context)
 			setGradelModuleBuildContext(context);
-			out = new FileOutputStream(new File(buildfile, "runfiles/setup.bat"));
+			out = new FileOutputStream(new File(buildfile, "runfiles/startup.bat"));
 			writer = new OutputStreamWriter(out, Charsets.UTF_8);
 			// writer = new FileWriter(new File(this.projectpath,
 			// "build.properties"));

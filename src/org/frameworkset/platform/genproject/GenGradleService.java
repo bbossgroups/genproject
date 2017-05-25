@@ -54,10 +54,8 @@ public class GenGradleService  extends BaseGen{
 	
 	protected String enabledubbo="false";
 	protected String enablepinpoint="false";
-	protected String AGENT_VERSION="1.6.0";
-	protected String AGENT_ID="dubbo160_1";
-	protected String APPLICATION_NAME="dubbo-app1";
-	protected String AGENT_PATH="d:/pinpoint/pinpoint-agent-1.6.0";
+	protected String traceagent="-javaagent:F:/6_environment/pinpoint-agent-1.6.1/pinpoint-bootstrap-1.6.1.jar -Dpinpoint.agentId=dubbo160_1 -Dpinpoint.applicationName=dubbo-test";
+	 
 
 	protected String skipTest="true";
 	protected String PROJ_WEBSITEURL="http://www.bbossgroups.com";
@@ -101,10 +99,8 @@ public class GenGradleService  extends BaseGen{
 		
 		enabledubbo = CommonLauncher.getProperty("enabledubbo","false");
 		enablepinpoint = CommonLauncher.getProperty("enablepinpoint","false");
-		AGENT_VERSION = CommonLauncher.getProperty("AGENT_VERSION");
-		AGENT_ID = CommonLauncher.getProperty("AGENT_ID");
-		APPLICATION_NAME = CommonLauncher.getProperty("APPLICATION_NAME");
-		AGENT_PATH = CommonLauncher.getProperty("AGENT_PATH");
+		traceagent = CommonLauncher.getProperty("traceagent");
+		 
 
 		skipTest = CommonLauncher.getProperty("skipTest","true");
 		PROJ_WEBSITEURL = CommonLauncher.getProperty("PROJ_WEBSITEURL","http://www.bbossgroups.com");
@@ -494,10 +490,8 @@ public class GenGradleService  extends BaseGen{
 		
 		context.put("enabledubbo",enabledubbo);
 		context.put("enablepinpoint",enablepinpoint);
-		context.put("AGENT_VERSION",AGENT_VERSION);
-		context.put("AGENT_ID",AGENT_ID);
-		context.put("APPLICATION_NAME",APPLICATION_NAME);
-		context.put("AGENT_PATH",AGENT_PATH);
+		context.put("traceagent",traceagent);
+		 
 		
 		context.put("skipTest",skipTest);
 		context.put("PROJ_WEBSITEURL",PROJ_WEBSITEURL);
@@ -527,10 +521,8 @@ public class GenGradleService  extends BaseGen{
 	{
 		context.put("enabledubbo",enabledubbo);
 		context.put("enablepinpoint",enablepinpoint);
-		context.put("AGENT_VERSION",AGENT_VERSION);
-		context.put("AGENT_ID",AGENT_ID);
-		context.put("APPLICATION_NAME",APPLICATION_NAME);
-		context.put("AGENT_PATH",AGENT_PATH);
+		context.put("traceagent",traceagent);
+		
 		context.put("projectname",projectname);
 		
 	}
@@ -539,10 +531,7 @@ public class GenGradleService  extends BaseGen{
 	{
 		context.put("enabledubbo",enabledubbo);
 		context.put("enablepinpoint",enablepinpoint);
-		context.put("AGENT_VERSION",AGENT_VERSION);
-		context.put("AGENT_ID",AGENT_ID);
-		context.put("APPLICATION_NAME",APPLICATION_NAME);
-		context.put("AGENT_PATH",AGENT_PATH);
+		context.put("traceagent",traceagent);	
 		context.put("projectname",projectname);
 		context.put("PROJ_GROUP",PROJ_GROUP);
 		
