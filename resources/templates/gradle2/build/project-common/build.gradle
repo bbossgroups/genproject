@@ -33,7 +33,6 @@ dependencies {
              [group: 'com.bbossgroups.pdp', name: 'bboss-pdp-fastwx', version: "${bboss_pdp_version}", transitive: false],
             [group: 'com.bbossgroups.pdp', name: 'bboss-pdp-dubbo', version: "${bboss_pdp_version}", transitive: false],
          
-            [group: 'log4j', name: 'log4j', version: '1.2.16', transitive: false],            
             [group: 'com.bbossgroups', name: 'bboss-util', version: "${bboss_version}", transitive: false],
             [group: 'com.bbossgroups', name: 'bboss-core', version: "${bboss_version}", transitive: false],
              [group: 'com.bbossgroups', name: 'bboss-soa', version: "${bboss_version}", transitive: false],
