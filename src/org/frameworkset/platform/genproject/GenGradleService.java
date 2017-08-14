@@ -10,9 +10,10 @@ import java.io.Writer;
 import java.util.zip.ZipException;
 
 import org.apache.commons.io.Charsets;
-import org.apache.log4j.Logger;
 import org.frameworkset.runtime.CommonLauncher;
 import org.frameworkset.util.io.ClassPathResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.frameworkset.util.FileUtil;
 import com.frameworkset.util.VelocityUtil;
@@ -22,7 +23,7 @@ import bboss.org.apache.velocity.VelocityContext;
 
 public class GenGradleService  extends BaseGen{
 
-	private static Logger log = Logger.getLogger(GenService.class);
+	private static Logger log = LoggerFactory.getLogger(GenService.class);
 	
 	protected File project_common; 
 	protected File project_service_interface;	

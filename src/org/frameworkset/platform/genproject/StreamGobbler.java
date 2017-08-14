@@ -7,10 +7,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class StreamGobbler extends Thread {
-	private static Logger log = Logger.getLogger(StreamGobbler.class);
+	private static Logger log = LoggerFactory.getLogger(StreamGobbler.class);
     InputStream is;
     String      type;
     OutputStream os;

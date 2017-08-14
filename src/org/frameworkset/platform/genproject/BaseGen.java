@@ -8,11 +8,12 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 import org.apache.commons.io.Charsets;
-import org.apache.log4j.Logger;
 import org.frameworkset.runtime.CommonLauncher;
 import org.frameworkset.util.io.AbstractResource;
 import org.frameworkset.util.io.ResourceHandleListener;
 import org.frameworkset.util.io.UrlResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.frameworkset.util.FileUtil;
 import com.frameworkset.util.VelocityUtil;
@@ -21,7 +22,7 @@ import bboss.org.apache.velocity.Template;
 import bboss.org.apache.velocity.VelocityContext;
 
 public abstract class BaseGen implements Gen {
-	private static Logger log = Logger.getLogger(GenService.class);	
+	private static Logger log = LoggerFactory.getLogger(GenService.class);	
 	protected File approotdir;
 	protected String eclipseworkspace;
 	protected String projectname;

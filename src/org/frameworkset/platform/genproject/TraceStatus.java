@@ -4,12 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
-import org.apache.log4j.Logger;
 import org.frameworkset.util.io.UrlResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
  
 
 public class TraceStatus extends Thread{
-	private static Logger log = Logger.getLogger(TraceStatus.class);
+	private static Logger log = LoggerFactory.getLogger(TraceStatus.class);
 	boolean first = true;
 	UrlResource url;
 	boolean ended = false;
