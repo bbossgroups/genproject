@@ -560,6 +560,8 @@ public class GenGradleService  extends BaseGen{
 			writer = new OutputStreamWriter(out,Charsets.UTF_8);
 //			writer = new FileWriter(new File(this.projectpath,
 //					"build.properties"));
+			log.info("gen file:"+new File(this.projectpath,
+					"gradle.properties").getAbsolutePath());
 			gradleproperties.merge(context, writer);
 			writer.flush();
 			writer.close();
@@ -573,6 +575,8 @@ public class GenGradleService  extends BaseGen{
 			writer = new OutputStreamWriter(out,Charsets.UTF_8);
 //			writer = new FileWriter(new File(this.projectpath,
 //					"build.properties"));
+			log.info("gen file:"+new File(this.projectpath,
+					"build.gradle").getAbsolutePath());
 			gradlebuild.merge(context, writer);
 			writer.flush();
 			writer.close();
@@ -587,6 +591,8 @@ public class GenGradleService  extends BaseGen{
 			writer = new OutputStreamWriter(out,Charsets.UTF_8);
 //			writer = new FileWriter(new File(this.projectpath,
 //					"build.properties"));
+			log.info("gen file:"+new File(this.projectpath,
+					"settings.gradle").getAbsolutePath());
 			gradlesetting.merge(context, writer);
 			writer.flush();
 			writer.close();
