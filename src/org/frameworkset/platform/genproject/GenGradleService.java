@@ -432,6 +432,12 @@ public class GenGradleService  extends BaseGen{
 			context.put("username", this.username);
 			context.put("password", this.password);
 			context.put("validationQuery", this.validationQuery);
+			log.info("dbpool 配置:");
+			log.info("		"+driverClassName);
+			log.info("		"+url);
+			log.info("		"+username);
+			log.info("		"+password);
+			log.info("		"+validationQuery);
 			out = new FileOutputStream(new File(this.project_web_resources,
 					"dbcp.xml"));
 			writer = new OutputStreamWriter(out,Charsets.UTF_8);
@@ -450,12 +456,15 @@ public class GenGradleService  extends BaseGen{
 			
 			resource.savetofile(new File(this.project_service_server_resources,
 					"poolman.xml"));
-			FileUtil.copy(new File(this.project_service_server_resources, "dbcp.xml"),
-					new File(this.projectdbinitpath, "resources")
-							.getAbsolutePath());
-			FileUtil.copy(new File(this.project_service_server_resources, "poolman.xml"),
-					new File(this.projectdbinitpath, "resources")
-							.getAbsolutePath());
+			
+			FileUtil.copy(new File(this.project_web_resources, "dbcp.xml"),
+					project_service_server_resources.getAbsolutePath());
+//			FileUtil.copy(new File(this.project_service_server_resources, "dbcp.xml"),
+//					new File(this.projectdbinitpath, "resources")
+//							.getAbsolutePath());
+//			FileUtil.copy(new File(this.project_service_server_resources, "poolman.xml"),
+//					new File(this.projectdbinitpath, "resources")
+//							.getAbsolutePath());
 		} catch (Exception e) {
 			log.error("生成数据库连接池配置文件失败：",e);
 		} finally {
