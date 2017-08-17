@@ -443,8 +443,16 @@ public class GenGradleService  extends BaseGen{
 			writer = new OutputStreamWriter(out,Charsets.UTF_8);
 			antbuild.merge(context, writer);
 			writer.flush();
-			ClassPathResource resource = new ClassPathResource(
+			ClassPathResource resource = null;
+			if(!this.projecttype.equals("gradle")){
+				resource = new ClassPathResource(
 					"templates/resources/poolman.xml");
+			}
+			else
+			{
+				resource = new ClassPathResource(
+						"templates/resources/poolman_cms.xml");
+			}
 			resource.savetofile(new File(this.project_web_resources,
 					"poolman.xml"));
 			FileUtil.copy(new File(this.project_web_resources, "dbcp.xml"),
