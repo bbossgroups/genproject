@@ -7,10 +7,10 @@ case \$1 in
     tail -f ${project}.log
      ;;
    stop)
-    java -jar ${project}-${bboss_version}.jar  stop --shutdownLevel=C
+    java -jar ${project}-${bboss_version}.jar  stop
      ;;
    restart)
-    nohup java ${vm} $traceagent -jar ${project}-${bboss_version}.jar restart --shutdownLevel=C > ${project}.log &
+    nohup java ${vm} $traceagent -jar ${project}-${bboss_version}.jar restart > ${project}.log &
     tail -f ${project}.log
     ;;
    *)
@@ -32,10 +32,10 @@ case \$1 in
     tail -f ${project}.log
      ;;
    stop)
-    java -jar ${project}-${bboss_version}.jar  stop --shutdownLevel=C
+    java -jar ${project}-${bboss_version}.jar  stop 
      ;;
    restart)
-    nohup java ${vm} -jar ${project}-${bboss_version}.jar restart --shutdownLevel=C > ${project}.log &
+    nohup java ${vm} -jar ${project}-${bboss_version}.jar restart > ${project}.log &
     tail -f ${project}.log
     ;;
    *)
