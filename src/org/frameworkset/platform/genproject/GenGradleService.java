@@ -38,7 +38,8 @@ public class GenGradleService  extends BaseGen{
 	protected File project_service_server_resources;
 	
 	protected File project_service_server;
-	
+	protected String[] runfiles = new String[]{"restart.bat","restart.sh","run.bat","run.sh",
+            "startup.bat","startup.sh","stop.bat","stop.sh","config.properties"};
 	/**
 	 * gradle属性文件定义开始
 	 */
@@ -666,109 +667,54 @@ public class GenGradleService  extends BaseGen{
 				}
 		}
 	}
-	
-	private void genDubboRuntimeFiles( ) {
+	protected void genDubboRuntimeFiles() {
 		Writer writer = null;
 		OutputStream out = null;
-		String templatepath = projecttype+"/build/project-dubbo/";
+		String templatepath = projecttype + "/build/project-dubbo/";
 		File buildfile = this.project_dubbo;
-		try {
-			
-			// 生成ant构建属性文件
-			Template gradle = VelocityUtil
-					.getTemplate(templatepath+"runfiles/setup.sh");
-			VelocityContext context = new VelocityContext();// VelocityUtil.buildVelocityContext(context)
-			setGradelModuleBuildContext(  context);
-			out = new FileOutputStream(new File(buildfile,
-					"runfiles/setup.sh"));
-			writer = new OutputStreamWriter(out,Charsets.UTF_8);
-//			writer = new FileWriter(new File(this.projectpath,
-//					"build.properties"));
-			gradle.merge(context, writer);
-			writer.flush();
-		} catch (Exception e) {
-			log.error("生成gradle构建文件失败：",e);
-		} finally {
-			if (out != null)
+		VelocityContext context = new VelocityContext();// VelocityUtil.buildVelocityContext(context)
+		setGradelModuleBuildContext(context);
+		for(String file:runfiles){
+			String sourceFile = templatepath + "runfiles/"+file;
+			File dest  = new File(buildfile, "runfiles/"+file);
+			try {
+	
+				// 生成ant构建属性文件
+				Template gradle = VelocityUtil.getTemplate(sourceFile);
+				
+				out = new FileOutputStream(dest);
+				writer = new OutputStreamWriter(out, Charsets.UTF_8);
+				// writer = new FileWriter(new File(this.projectpath,
+				// "build.properties"));
+				gradle.merge(context, writer);
+				writer.flush();
+			} catch (Exception e) {
 				try {
-					out.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.error("根据模板["+sourceFile+"]生成gradle构建文件失败："+dest.getCanonicalPath(), e);
+				} catch (IOException e1) {
+				 
 				}
-			if (writer != null)
-				try {
-					writer.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			} finally {
+				if (out != null)
+					try {
+						out.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				if (writer != null)
+					try {
+						writer.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			}
 		}
+
 		
-		try {
-			// 生成ant构建属性文件
-			Template gradle = VelocityUtil
-					.getTemplate(templatepath+"runfiles/setup.bat");
-			VelocityContext context = new VelocityContext();// VelocityUtil.buildVelocityContext(context)
-			setGradelModuleBuildContext(  context);
-			out = new FileOutputStream(new File(buildfile,
-					"runfiles/setup.bat"));
-			writer = new OutputStreamWriter(out,Charsets.UTF_8);
-//			writer = new FileWriter(new File(this.projectpath,
-//					"build.properties"));
-			gradle.merge(context, writer);
-			writer.flush();
-		} catch (Exception e) {
-			log.error("生成gradle构建文件失败：",e);
-		} finally {
-			if (out != null)
-				try {
-					out.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			if (writer != null)
-				try {
-					writer.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-		}
-		
-		try {
-			// 生成ant构建属性文件
-			Template gradle = VelocityUtil
-					.getTemplate(templatepath+"runfiles/config.properties");
-			VelocityContext context = new VelocityContext();// VelocityUtil.buildVelocityContext(context)
-			setGradelModuleBuildContext(  context);
-			out = new FileOutputStream(new File(buildfile,
-					"runfiles/config.properties"));
-			writer = new OutputStreamWriter(out,Charsets.UTF_8);
-//			writer = new FileWriter(new File(this.projectpath,
-//					"build.properties"));
-			gradle.merge(context, writer);
-			writer.flush();
-		} catch (Exception e) {
-			log.error("生成gradle构建文件失败：",e);
-		} finally {
-			if (out != null)
-				try {
-					out.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			if (writer != null)
-				try {
-					writer.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-		}
 	}
+	
 	private void genantAPIModuleProjectBuildfile() {
 		genModuleProjectBuildfile(projecttype+"/build/project-api/build.gradle",project_service_interface );
 		

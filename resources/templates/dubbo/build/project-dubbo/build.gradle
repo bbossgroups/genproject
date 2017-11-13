@@ -40,33 +40,45 @@ dependencies {
      
 }
 
-task copyLibFiles(type: Copy ){ 
-	from jar.outputs
-	from configurations.compile 
-	into 'build/dist/${projectname}-dubbo/lib'
-}
-task copyResourceFiles(type: Copy ){ 
-	from fileTree(dir: 'src/test/resources')
-	into 'build/dist/${projectname}-dubbo/resources'
+task copyJarFiles(type: Sync,dependsOn:'jar'){
+	 from configurations.compile
+	 from jar.outputs
+	 exclude { details -> details.file.name.startsWith('bboss-rt')  }
+	 into 'build/dist/lib'
+
 }
 
- 
-task copyToolFiles(type: Copy ){
-	 
-	from ('runfiles')
-	{
-		expand(bboss_version: "${bboss_version}")
-		
-	} 
-    from configurations.runtime - configurations.compile
-    filteringCharset = 'UTF-8'            
-	into 'build/dist/${projectname}-dubbo'
-	 
+task copyRTJarFiles(type: Copy,dependsOn:'copyJarFiles'){
+	 from configurations.runtime - configurations.compile
+	 into 'build/dist'
+     rename ("bboss-rt-${bboss_version}.jar", "${project.name}-${bboss_version}.jar")
 }
-project.tasks.copyLibFiles.dependsOn(project.tasks.install) 
-task releaseRuntimeZip(type: Zip,dependsOn:['copyToolFiles','copyResourceFiles','copyLibFiles']) {
+task copyToolFiles(type: Copy ,dependsOn:'copyRTJarFiles')  {
+			from ('runfiles')
+			{
+				expand(
+						bboss_version:"${bboss_version}",
+                        project:"${project.name}",
+                        vm:"-Xms512m -Xmx512m -Xmn256m -XX:PermSize=128M -XX:MaxPermSize=128M"
+						)
+
+			}
+		  filteringCharset = 'UTF-8'
+			into 'build/dist/'
+
+
+
+}
+task copyResourcesfiles(type: Sync )  {
+	from fileTree(dir: 'src/test/resources')
+	filteringCharset = 'UTF-8'
+	into 'build/dist/resources'
+}
+
+task releaseVersion(type: Zip,dependsOn:['copyToolFiles','copyResourcesfiles']) {
+
     //appendix = 'wrapper'
-   baseName='${projectname}-dubbo'
-   from 'build/dist/${projectname}-dubbo'
-   
+   classifier = 'released'
+   from 'build/dist/'
+
 }
