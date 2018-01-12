@@ -34,7 +34,7 @@ dependencies {
     		[group: 'com.bbossgroups.pdp', name: 'pdp-desktop', version: "${bboss_pdp_version}", transitive: false],
 			[group: 'com.bbossgroups.pdp', name: 'pdp-datasource', version: "${bboss_pdp_version}", transitive: false],
 			[group: 'com.bbossgroups.pdp', name: 'pdp-appbom', version: "${bboss_pdp_version}", transitive: false],
-			[group: 'com.bbossgroups.pdp', name: 'pdp-appmonitor', version: "${bboss_pdp_version}", transitive: false],
+			 
 			[group: 'com.bbossgroups.pdp', name: 'pdp-mail', version: "${bboss_pdp_version}", transitive: false],
 			[group: 'com.bbossgroups.pdp', name: 'pdp-wordpdfdemo', version: "${bboss_pdp_version}", transitive: false],
 			[group: 'com.bbossgroups.pdp', name: 'pdp-masterdata', version: "${bboss_pdp_version}", transitive: false],
