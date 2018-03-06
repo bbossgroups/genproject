@@ -49,10 +49,7 @@ dependencies {
 			[group: 'com.bbossgroups.pdp', name: 'pdp-system', version: "${bboss_pdp_version}", transitive: true],
 			[group: 'commons-digester', name: 'commons-digester', version: "2.1", transitive: false],     
 			[group: 'commons-codec', name: 'commons-codec', version: "1.10", transitive: false],     
-			[group: 'org.apache.httpcomponents', name: 'httpclient', version: "4.4.1", transitive: false],     
-			[group: 'org.apache.httpcomponents', name: 'httpcomponents-client', version: "4.4.1", transitive: false],     
-			[group: 'org.apache.httpcomponents', name: 'httpcomponents-core', version: "4.4.1", transitive: false],     
-			[group: 'org.apache.httpcomponents', name: 'httpcore', version: "4.4.1", transitive: false],     
+			
 			[group: 'net.sf.ezmorph', name: 'ezmorph', version: "1.0.4", transitive: false],     
     
     )
