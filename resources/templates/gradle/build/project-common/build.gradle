@@ -24,8 +24,8 @@ sourceSets {
     
 }
 dependencies {
-	
-   compile (    	            
+
+	api (
    			[group: 'com.bbossgroups.pdp', name: 'pdp-trans', version: "${bboss_pdp_version}", transitive: false],
 			[group: 'com.bbossgroups.pdp', name: 'pdp-wx', version: "${bboss_pdp_version}", transitive: false],
 			[group: 'com.bbossgroups.pdp', name: 'pdp-cms', version: "${bboss_pdp_version}", transitive: false],

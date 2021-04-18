@@ -27,9 +27,9 @@ sourceSets {
 
  
 dependencies {
-   compile project(':${projectname}-service')
-     
-    compile ( 
+	api project(':${projectname}-service')
+
+	api (
         
 	         fileTree(dir: '../lib', include: '**/*.jar'),
 	    )

@@ -1,1 +1,0 @@
-java -Xms512m -Xmx512m -Xmn256m -XX:PermSize=128M -XX:MaxPermSize=128M -jar bboss-rt-${bboss_version}.jar --conf=config-gradle2.properties

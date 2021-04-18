@@ -1,25 +1,19 @@
 package org.frameworkset.platform.genproject;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-
+import bboss.org.apache.velocity.Template;
+import bboss.org.apache.velocity.VelocityContext;
+import com.frameworkset.util.FileUtil;
+import com.frameworkset.util.VelocityUtil;
 import org.apache.commons.io.Charsets;
 import org.frameworkset.runtime.CommonLauncher;
+import org.frameworkset.runtime.OSInfo;
 import org.frameworkset.util.io.AbstractResource;
 import org.frameworkset.util.io.ResourceHandleListener;
 import org.frameworkset.util.io.UrlResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.frameworkset.util.FileUtil;
-import com.frameworkset.util.VelocityUtil;
-
-import bboss.org.apache.velocity.Template;
-import bboss.org.apache.velocity.VelocityContext;
+import java.io.*;
 
 public abstract class BaseGen implements Gen {
 	private static Logger log = LoggerFactory.getLogger(GenService.class);	
@@ -290,7 +284,7 @@ public abstract class BaseGen implements Gen {
 			String dir = projectdbinitpath.getCanonicalPath();
 			String bboss_version = CommonLauncher.getProperty("bboss_version", "5.0.1");
 			context.put("bboss_version", bboss_version);
-			if (CommonLauncher.isWindows())
+			if (OSInfo.isWindows())
 			{
 //				${dbinitdisk}
 				context.put("dbinitdisk",dir.substring(0,dir.indexOf(':')+1));
@@ -340,7 +334,7 @@ public abstract class BaseGen implements Gen {
 			VelocityContext context = new VelocityContext();// VelocityUtil.buildVelocityContext(context)
 			String bboss_version = CommonLauncher.getProperty("bboss_version", "5.0.1");
 			context.put("bboss_version", bboss_version);
-			if (CommonLauncher.isWindows())
+			if (OSInfo.isWindows())
 			{
 //				${dbinitdisk}
 				context.put("dbinitdisk","");
@@ -374,7 +368,7 @@ public abstract class BaseGen implements Gen {
 	}
 	protected void chmodx() throws IOException
 	{
-		Process proc = !CommonLauncher.isOSX()?
+		Process proc = !OSInfo.isMacOSX()?
 				Runtime.getRuntime().exec("chmod +x -R "+
 				this.projectpath
 						.getCanonicalPath()):
@@ -400,7 +394,7 @@ public abstract class BaseGen implements Gen {
 
 			try {
 				Process proc = null;
-				if (CommonLauncher.isWindows()) {
+				if (OSInfo.isWindows()) {
 					setupdbinitpath("dbinit/startup.bat","startup.bat");
 					proc = Runtime.getRuntime().exec(
 							new File(this.projectdbinitpath, "/startup.bat")
@@ -436,7 +430,7 @@ public abstract class BaseGen implements Gen {
 			}
 			finally
 			{
-				if (CommonLauncher.isWindows()) {
+				if (OSInfo.isWindows()) {
 //					${dbinitpath}
 					recoverdbinitpath("dbinit/startup.bat","startup.bat");
 					recoverdbinitpath("dbinit/startup.bat","startup.sh");

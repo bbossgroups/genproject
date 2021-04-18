@@ -1,3 +1,4 @@
+def profile = System.getProperty("profile") ?: "dev"
 configure(allprojects) { project ->
 	group = PROJ_GROUP
 	version = PROJ_VERSION	
@@ -7,7 +8,7 @@ configure(allprojects) { project ->
 	apply plugin: "eclipse"
 	apply plugin: "idea"
 	apply plugin: "signing"
-	apply plugin: "maven"
+	apply plugin: "java-library"
 	eclipse {
 		jdt {
 			//if you want to alter the java versions (by default they are configured with gradle java plugin settings):
@@ -46,7 +47,7 @@ configure(allprojects) { project ->
 
 
 	dependencies {
-		testCompile 'junit:junit:4.13.1'
+		testImplementation 'junit:junit:4.13.1'
 		
 		 
 	}
@@ -54,7 +55,7 @@ configure(allprojects) { project ->
 	repositories {
 		mavenLocal()
 		 maven {
-	        url "http://maven.aliyun.com/nexus/content/groups/public"
+	        url "https://maven.aliyun.com/nexus/content/groups/public"
 	    }
 		mavenCentral()
 		
@@ -69,35 +70,34 @@ configure(allprojects) { project ->
 	}
 }
 
- 
 
 
 sourceSets {
-    main {
-        java {
-            srcDir 'src'
-           
-        }
-       compileClasspath = configurations.compile + configurations.runtime
-    }
-    test {
-        java {
-            srcDir 'test'
-        }
-         resources{
-        	srcDir 'resources'
-        }
-    }
-    
+	main {
+		java {
+			srcDir 'src'
+
+		}
+
+		resources {
+			srcDir 'resources'
+		}
+
+
+
+//			compileClasspath = configurations.compile + configurations.runtime
+	}
+
+
 }
 
+
 dependencies {
-    compile (
+    api (
     
              
-            [group: 'com.bbossgroups', name: 'bboss-util', version: "${bboss_version}", transitive: false],
-             [group: 'com.bbossgroups', name: 'bboss-core', version: "${bboss_version}", transitive: false],
-             [group: 'com.bbossgroups', name: 'bboss-velocity', version: "${bboss_version}", transitive: false],
+             [group: 'com.bbossgroups', name: 'bboss-core', version: "${bboss_version}", transitive: true],
+             [group: 'com.bbossgroups', name: 'bboss-velocity', version: "${bboss_version}", transitive: true],
              
               [group: 'oro', name: 'oro', version: '2.0.8', transitive: false],
               [group: 'commons-lang', name: 'commons-lang', version: '2.6', transitive: false],
@@ -112,49 +112,64 @@ dependencies {
 	            
     )
 
-	runtime(
+	api(
 		[group: 'com.bbossgroups', name: 'bboss-rt', version: "${PROJ_BBOSS_VERSION}", transitive: false],
     )
 }
 
 
 
-
-
-task copyLibFiles(type: Copy ){ 
+task copyJarFiles(type: Sync,dependsOn:'jar'){
+	from configurations.api{
+		canBeResolved=true
+	}
 	from jar.outputs
-	from configurations.compile 
-	into 'build/dist/genproject/lib'
-}
-task copyResourceFiles(type: Copy ){ 
-	from fileTree(dir: 'resources')
-	into 'build/dist/genproject/resources'
-}
+	exclude { details -> details.file.name.startsWith('bboss-rt')  }
+	into 'build/dist/lib'
 
-task copyDemoFiles(type: Copy ){ 
+}
+task copyDemoFiles(type: Copy ){
 	from fileTree(dir: 'demo')
-	into 'build/dist/genproject/demo'
+	into 'build/dist/demo'
 }
 
- 
-task copyToolFiles(type: Copy ){
-	 
-	from ('runtime')
-	{
-		expand(bboss_version: "${PROJ_BBOSS_VERSION}",main_class:'org.frameworkset.platform.genproject.GenProject')
-		
-	} 
-    from configurations.runtime - configurations.compile
-    filteringCharset = 'UTF-8'            
-	into 'build/dist/genproject'
-	 
+task copyRTJarFiles(type: Copy,dependsOn:'copyJarFiles'){
+
+	from configurations.api{
+		canBeResolved=true
+	}
+	include { details -> details.file.name.startsWith('bboss-rt')  }
+	into 'build/dist'
+	rename ("bboss-rt-${bboss_version}.jar", "${project.name}-${bboss_version}.jar")
 }
-project.tasks.copyLibFiles.dependsOn(project.tasks.install) 
-task releaseRuntimeZip(type: Zip,dependsOn:['copyToolFiles','copyResourceFiles','copyLibFiles','copyDemoFiles']) {
-    //appendix = 'wrapper'
-   baseName='genproject'
-   from 'build/dist/genproject'
-   
+task copyToolFiles(type: Copy ,dependsOn:'copyRTJarFiles')  {
+
+	from ('runfiles')
+			{
+				expand(
+						bboss_version:"${bboss_version}",
+						project:"${project.name}"
+				)
+
+			}
+	filteringCharset = 'UTF-8'
+	into 'build/dist/'
+
+
+
+}
+task copyResourcesfiles(type: Sync )  {
+	from fileTree(dir: 'resources')
+	filteringCharset = 'UTF-8'
+	into 'build/dist/resources'
+}
+
+task releaseVersion(type: Zip,dependsOn:['copyToolFiles','copyDemoFiles','copyResourcesfiles']) {
+
+	//appendix = 'wrapper'
+	archiveClassifier = 'released'
+	from 'build/dist/'
+
 }
 
  

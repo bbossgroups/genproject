@@ -1,0 +1,1 @@
+java -Xms512m -Xmx512m -Xmn256m -XX:PermSize=128M -XX:MaxPermSize=128M -jar ${project}-${bboss_version}.jar --conf=config-gradle.properties
