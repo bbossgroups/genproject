@@ -31,7 +31,7 @@ dependencies {
 	api project(':${projectname}-service')
 	api 'io.jsonwebtoken:jjwt:0.7.0'
 	api (
-		  [group: 'mysql', name: 'mysql-connector-java', version: '5.1.39', transitive: false],
+		  [group: 'mysql', name: 'mysql-connector-java', version: '8.0.28', transitive: false],
 		   fileTree(dir: '../lib', include: '**/*.jar'),    
 		)
     
