@@ -37,7 +37,7 @@ dependencies {
             [group: 'com.bbossgroups', name: 'bboss-core', version: "${bboss_version}", transitive: false],
              [group: 'com.bbossgroups', name: 'bboss-soa', version: "${bboss_version}", transitive: false],
             [group: 'com.bbossgroups', name: 'bboss-taglib', version: "${bboss_version}", transitive: false],
-            [group: 'com.bbossgroups', name: 'bboss-data', version: "${bboss_version}", transitive: true],
+            [group: 'com.bbossgroups', name: 'bboss-data', version: "${PROJ_BBOSS_DATA_VERSION}", transitive: true],
            [group: 'com.bbossgroups', name: 'bboss-mvc', version: "${bboss_version}", transitive: false],
             [group: 'com.bbossgroups', name: 'bboss-schedule', version: "${bboss_version}", transitive: true],
         
