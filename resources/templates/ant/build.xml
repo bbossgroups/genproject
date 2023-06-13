@@ -86,12 +86,12 @@
 		<delete dir="${distrib}/WebRoot/sitepublish"/>
 		<delete dir="${distrib}/WebRoot/cms/siteResource/BPIT"/>
 			<delete dir="${distrib}/WebRoot/cms/siteResource/MobileVote"/>
-			<delete dir="${distrib}/WebRoot/cms/siteResource/sanyIPP"/>
+			<delete dir="${distrib}/WebRoot/cms/siteResource/sIPP"/>
 		<delete dir="${distrib}/WebRoot/webqqdemo"/>
-				<delete dir="${distrib}/WebRoot/sanyems"/>
-				<delete dir="${distrib}/WebRoot/sanygsp"/>
-		<delete dir="${distrib}/WebRoot/sanyhrm"/>
-		<delete dir="${distrib}/WebRoot/sanymbp"/>
+				<delete dir="${distrib}/WebRoot/sems"/>
+				<delete dir="${distrib}/WebRoot/sgsp"/>
+		<delete dir="${distrib}/WebRoot/shrm"/>
+		<delete dir="${distrib}/WebRoot/smbp"/>
 		
 		<mkdir dir="${distrib}/WebRoot/WEB-INF/classes"/>
 		<copy todir="${distrib}/WebRoot/WEB-INF/classes">
