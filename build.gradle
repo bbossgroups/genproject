@@ -100,11 +100,11 @@ dependencies {
               [group: 'oro', name: 'oro', version: '2.0.8', transitive: false],
               [group: 'commons-lang', name: 'commons-lang', version: '2.6', transitive: false],
               //[group: 'commons-logging', name: 'commons-logging', version: '1.1', transitive: false],
-            [group: 'commons-collections', name: 'commons-collections', version: '3.2.1', transitive: false],
-             [group: 'com.fasterxml.uuid', name: 'java-uuid-generator', version: '3.1.2', transitive: false],
+            [group: 'commons-collections', name: 'commons-collections', version: '3.2.2', transitive: false],
+             [group: 'com.fasterxml.uuid', name: 'java-uuid-generator', version: '4.3.0', transitive: false],
               
              [group: 'commons-io', name: 'commons-io', version: '2.4', transitive: false],
-           	[group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.36', transitive: true],
+           	[group: 'org.slf4j', name: 'slf4j-log4j12', version: '2.0.12', transitive: true],
 
 
 	            
