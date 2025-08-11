@@ -108,7 +108,7 @@ dependencies {
             [group: 'commons-collections', name: 'commons-collections', version: '3.2.2', transitive: false],
              [group: 'com.fasterxml.uuid', name: 'java-uuid-generator', version: '4.3.0', transitive: false],
               
-             [group: 'commons-io', name: 'commons-io', version: '2.4', transitive: false],
+             [group: 'commons-io', name: 'commons-io', version: '2.18.0', transitive: false],
 //           	[group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.36', transitive: true],
 
 
