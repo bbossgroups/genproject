@@ -27,8 +27,8 @@ configure(allprojects) { project ->
 	}
 
 	tasks.withType(Javadoc) {
-		sourceCompatibility = JAVADOC_SOURCE_LEVEL
-		targetCompatibility = JAVADOC_COMPILER_LEVEL
+		
+		
 		options.encoding = 'UTF-8'
 	}
 
@@ -120,58 +120,73 @@ dependencies {
     )
 }
 
+// 创建可解析的配置
+configurations {
+    apiResolvable {
+        canBeResolved = true
+        extendsFrom api
+    }
+    compileOnlyResolvable {
+        canBeResolved = true
+        extendsFrom compileOnly
+    }
 
-
-task copyJarFiles(type: Sync,dependsOn:'jar'){
-	from configurations.api{
-		canBeResolved=true
-	}
-	from jar.outputs
-	exclude { details -> details.file.name.startsWith('bboss-rt')  }
-	into 'build/dist/lib'
+    runtimeOnlyResolvable {
+        canBeResolved = true
+        extendsFrom runtimeOnly
+    }
+}
+tasks.register('copyJarFiles', Sync) {
+    dependsOn 'jar'
+    from configurations.apiResolvable {
+    }
+    from jar.outputs
+    exclude { details -> details.file.name.startsWith('bboss-rt') }
+    into 'build/dist/lib'
 
 }
-task copyDemoFiles(type: Copy ){
-	from fileTree(dir: 'demo')
-	into 'build/dist/demo'
+tasks.register('copyDemoFiles', Copy) {
+    from fileTree(dir: 'demo')
+    into 'build/dist/demo'
 }
 
-task copyRTJarFiles(type: Copy,dependsOn:'copyJarFiles'){
+tasks.register('copyRTJarFiles', Copy) {
+    dependsOn 'copyJarFiles'
 
-	from configurations.api{
-		canBeResolved=true
-	}
-	include { details -> details.file.name.startsWith('bboss-rt')  }
-	into 'build/dist'
-	rename ("bboss-rt-${bboss_version}.jar", "${project.name}-${bboss_version}.jar")
+    from configurations.apiResolvable {
+    }
+    include { details -> details.file.name.startsWith('bboss-rt') }
+    into 'build/dist'
+    rename("bboss-rt-${bboss_version}.jar", "${project.name}-${bboss_version}.jar")
 }
-task copyToolFiles(type: Copy ,dependsOn:'copyRTJarFiles')  {
+tasks.register('copyToolFiles', Copy) {
+    dependsOn 'copyRTJarFiles'
 
-	from ('runfiles')
-			{
-				expand(
-						bboss_version:"${bboss_version}",
-						project:"${project.name}"
-				)
+    from('runfiles')
+            {
+                expand(
+                        bboss_version: "${bboss_version}",
+                        project: "${project.name}"
+                )
 
-			}
-	filteringCharset = 'UTF-8'
-	into 'build/dist/'
-
+            }
+    filteringCharset = 'UTF-8'
+    into 'build/dist/'
 
 
 }
-task copyResourcesfiles(type: Sync )  {
-	from fileTree(dir: 'resources')
-	filteringCharset = 'UTF-8'
-	into 'build/dist/resources'
+tasks.register('copyResourcesfiles', Sync) {
+    from fileTree(dir: 'resources')
+    filteringCharset = 'UTF-8'
+    into 'build/dist/resources'
 }
 
-task releaseVersion(type: Zip,dependsOn:['copyToolFiles','copyDemoFiles','copyResourcesfiles']) {
+tasks.register('releaseVersion', Zip) {
+    dependsOn 'copyToolFiles', 'copyDemoFiles', 'copyResourcesfiles'
 
-	//appendix = 'wrapper'
-	archiveClassifier = 'released'
-	from 'build/dist/'
+    //appendix = 'wrapper'
+    archiveClassifier = 'released'
+    from 'build/dist/'
 
 }
 
